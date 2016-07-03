@@ -100,11 +100,11 @@ public class UpdatePart {
 					UpdateColumn wc = it.next();
 					cw.bL("if(").w(wc.getCwc().getCheckNullVar()).el("){");
 					if (!first) {
-						cw.bL("if(").w(firstUpdate).el("){");
+						cw.bL("if(!").w(firstUpdate).el("){");
 					}
-					cw.bL(firstUpdate).el(" =  false;").bL("sql.append(\"").w(wc.getSetSql()).el("\");");
+					cw.bL(firstUpdate).el(" =  true;").bL("sql.append(\"").w(wc.getSetSql()).el("\");");
 					if (!first) {
-						cw.l("}else{").l("sql.append(\",").w(wc.getSetSql()).el("\");");
+						cw.l("}else{").bL("sql.append(\",").w(wc.getSetSql()).el("\");");
 						cw.l("}");
 					}
 					if (first) {
