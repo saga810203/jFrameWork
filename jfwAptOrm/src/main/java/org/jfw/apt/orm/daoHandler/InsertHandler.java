@@ -42,7 +42,7 @@ public class InsertHandler extends BaseManipulationHandler {
 
 		cw.bL("String sql=\"INSERT INTO ").w(this.fromTable.getFromSentence()).w(" (");
 
-		boolean first = false;
+		boolean first = true;
 		for (ListIterator<Column> it = list.listIterator(); it.hasNext();) {
 			if (first)
 				first = false;
@@ -71,10 +71,12 @@ public class InsertHandler extends BaseManipulationHandler {
 				cw.ws(col.getFixSqlValueWithInsert());
 			}
 		}
+		cw.el(")\";");
 		
 		for(ColumnWriterCache cwc:this.sqlparams){
 			cwc.prepare();
 		}
+
 	}
 	@Override
 	protected void prepareSQL() {	

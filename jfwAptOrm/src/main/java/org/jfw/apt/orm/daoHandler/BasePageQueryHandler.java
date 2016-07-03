@@ -25,7 +25,7 @@ public abstract class BasePageQueryHandler extends BaseQueryHandler {
 
 	@Override
 	public boolean match(Element ele) {
-		return null != this.ref.getAnnotation(PageQuery.class);
+		return null != ele.getAnnotation(PageQuery.class);
 	}
 
 	@Override
@@ -70,12 +70,16 @@ public abstract class BasePageQueryHandler extends BaseQueryHandler {
 	protected abstract String getSelectFieldWithRecordCount();
 
 	protected void prepareSQL() {
+		this.totalName = cw.getMethodTempVarName();
+		cw.bL("int ").w(this.totalName).el(" = 0;");
+		cw.bL(PAGE_PREFIX).w(this.returnClassName).w(PAGE_SUFFIX).w(" _result = new ").w(PAGE_PREFIX)
+				.w(this.returnClassName).el(">();");
 		if (this.wherePart != null)
 			this.wherePart.prepare(cw);
 		this.whereSqlName = cw.getMethodTempVarName();
 
 		if (this.dynamic) {
-			cw.l("Stringbuilder sql = new StringBuilder();");
+			cw.l("StringBuilder sql = new StringBuilder();");
 			// cw.bL("sql.append(\"SELECT ");
 			this.wherePart.WriteDynamic(cw);
 
@@ -93,17 +97,21 @@ public abstract class BasePageQueryHandler extends BaseQueryHandler {
 		}
 
 		if (this.dynamic) {
-			cw.bL("sql = new StringBuilder");
+			cw.l("sql = new StringBuilder();");
 			cw.bL("sql.append(\"SELECT ");
 		} else {
 			cw.bL("sql = \"SELECT ");
 		}
 
-		cw.ws(this.getSelectFieldWithRecordCount()).w(" FROM").ws(this.fromSentence);
+		cw.ws(this.getSelectFieldWithRecordCount()).w(" FROM ").ws(this.fromSentence);
 		cw.el("\");");
 		if (this.dynamic) {
-			cw.bL("if(").w(this.whereSqlName).el(".length()>0){").bL("sql.append(").w(this.whereSqlName).el(");")
-					.l("}");
+			if (this.wherePart.hasStaticPart()) {
+				cw.bL("sql.append(").w(this.whereSqlName).el(");");
+			} else {
+				cw.bL("if(").w(this.whereSqlName).el(".length()>0){").bL("sql.append(").w(this.whereSqlName).el(");")
+						.l("}");
+			}
 		} else {
 			if (null != this.wherePart) {
 				cw.bL("sql = sql + ").w(this.whereSqlName).el(";");
@@ -117,19 +125,14 @@ public abstract class BasePageQueryHandler extends BaseQueryHandler {
 	protected void buildSqlParamters() {
 		this.buildSqlParamters2();
 
-		this.totalName = cw.getMethodTempVarName();
-
-		cw.bL("int ").w(this.totalName).el(" = 0;");
-		cw.bL(PAGE_PREFIX).w(this.returnClassName).w(PAGE_SUFFIX).w(" _result = new ").w(PAGE_PREFIX)
-				.w(this.returnClassName).el(">();");
-
 		cw.bL("_result.setPageSize(").w(this.pageSizeName).el(");");
 		cw.l("java.sql.ResultSet _pageRs = ps.executeQuery();");
 		cw.l("try{");
 		cw.l("_pageRs.next();");
 		this.readRecordCount();
 		cw.l("}finally{").writeClosing("_pageRs").l("}");
-		cw.writeClosing("ps");
+
+		cw.l("}finally{").writeClosing("ps").l("}");
 
 		cw.bL("_result.setTotal(").w(this.totalName).el(");");
 		cw.bL("if(0== ").w(this.totalName).el("){").l("_result.setPageNo(1);")
@@ -155,7 +158,7 @@ public abstract class BasePageQueryHandler extends BaseQueryHandler {
 	protected abstract void doBeforSelectForFirstPage();
 
 	protected abstract void doBeforFromForFirstPage();
-	
+
 	protected abstract void doAfterWhereForFirstPage();
 
 	protected abstract void doAfterOrderByForFirstPage();
@@ -163,6 +166,7 @@ public abstract class BasePageQueryHandler extends BaseQueryHandler {
 	protected abstract void doBeforSelectForNotFirstPage();
 
 	protected abstract void doBeforFromForNotFirstPage();
+
 	protected abstract void doAfterWhereForNotFirstPage();
 
 	protected abstract void doAfterOrderByForNotFirstPage();
@@ -170,10 +174,10 @@ public abstract class BasePageQueryHandler extends BaseQueryHandler {
 	protected abstract void initForNotFirstPage();
 
 	protected void doFirstPage() {
-		
+
 		cw.l("_result.setPageNo(1);");
 		if (this.dynamic) {
-			cw.l("Stringbuilder sql = new StringBuilder");
+			cw.l("sql = new StringBuilder();");
 			cw.bL("sql.append(\"");
 		} else {
 			cw.bL("sql = \"");
@@ -194,23 +198,27 @@ public abstract class BasePageQueryHandler extends BaseQueryHandler {
 		this.doBeforFromForFirstPage();
 
 		cw.w(" FROM ").ws(this.fromSentence);
-		
+
 		cw.el("\");");
 		if (this.dynamic) {
-			cw.bL("if(").w(this.whereSqlName).el(".length()>0){")
-			  .bL("sql.append(").w(this.whereSqlName).el(");")
-			  .l("}");			
+			if (this.wherePart.hasStaticPart()) {
+				cw.bL("sql.append(").w(this.whereSqlName).el(");");
+			} else {
+				cw.bL("if(").w(this.whereSqlName).el(".length()>0){").bL("sql.append(").w(this.whereSqlName).el(");")
+						.l("}");
+			}
 			doAfterWhereForFirstPage();
 			if (null != this.orderBy)
 				cw.bL("sql.append(\" ").ws(this.orderBy).el("\");");
 		} else {
-			
+
 			if (null != this.wherePart) {
 				cw.bL("sql = sql + ").w(this.whereSqlName).el(";");
 			}
-			doAfterWhereForFirstPage();			
+			doAfterWhereForFirstPage();
 			if (this.orderBy != null) {
-				cw.bL("sql = sql + ").w("\"").ws(this.orderBy).el("\";");;
+				cw.bL("sql = sql + ").w("\"").ws(this.orderBy).el("\";");
+				;
 			}
 		}
 
@@ -221,7 +229,7 @@ public abstract class BasePageQueryHandler extends BaseQueryHandler {
 		this.initForNotFirstPage();
 
 		if (this.dynamic) {
-			cw.l("Stringbuilder sql = new StringBuilder");
+			cw.l("sql = new StringBuilder();");
 			cw.bL("sql.append(\"");
 		} else {
 			cw.bL("sql = \"");
@@ -244,20 +252,20 @@ public abstract class BasePageQueryHandler extends BaseQueryHandler {
 		cw.w(" FROM ").ws(this.fromSentence);
 		cw.el("\");");
 		if (this.dynamic) {
-			cw.bL("if(").w(this.whereSqlName).el(".length()>0){")
-			  .bL("sql.append(").w(this.whereSqlName).el(");")
-			  .l("}");			
+			cw.bL("if(").w(this.whereSqlName).el(".length()>0){").bL("sql.append(").w(this.whereSqlName).el(");")
+					.l("}");
 			doAfterWhereForNotFirstPage();
 			if (null != this.orderBy)
 				cw.bL("sql.append(\" ").ws(this.orderBy).el("\");");
 		} else {
-			
+
 			if (null != this.wherePart) {
 				cw.bL("sql = sql + ").w(this.whereSqlName).el(";");
 			}
-			doAfterWhereForNotFirstPage();			
+			doAfterWhereForNotFirstPage();
 			if (this.orderBy != null) {
-				cw.bL("sql = sql + ").w("\"").ws(this.orderBy).el("\";");;
+				cw.bL("sql = sql + ").w("\"").ws(this.orderBy).el("\";");
+				;
 			}
 		}
 		this.doAfterOrderByForNotFirstPage();
@@ -281,7 +289,7 @@ public abstract class BasePageQueryHandler extends BaseQueryHandler {
 		cw.bL("_result.setData(").w(listName).el(");");
 		cw.bL("int ").w(limitName).el(" = 0;");
 
-		cw.bL("while((").w(limitName).w("<").w(this.pageSizeName).el(") && rs.next(){");
+		cw.bL("while((").w(limitName).w("<").w(this.pageSizeName).el(") && rs.next()){");
 		cw.bL("++").w(limitName).el(";");
 		cw.bL(this.returnClassName).w(" _obj =  new ").w(this.returnClassName).el("();");
 		int i = 1;
@@ -294,9 +302,10 @@ public abstract class BasePageQueryHandler extends BaseQueryHandler {
 		cw.l("}");
 		cw.l("return _result;");
 	}
-	
+
 	protected void buildWhere() throws AptException {
-		this.wherePart = WhereFactory.build(this.me, this.fromDataEntry,false,Arrays.asList(this.pageNoName,this.pageSizeName));
+		this.wherePart = WhereFactory.build(this.me, this.fromDataEntry, false,
+				Arrays.asList(this.pageNoName, this.pageSizeName));
 		this.dynamic = (null != this.wherePart) && this.wherePart.isDynamic();
 	}
 

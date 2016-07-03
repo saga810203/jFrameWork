@@ -14,7 +14,7 @@ public class QueryListHandler extends BaseQueryHandler {
 
 	@Override
 	public boolean match(Element ele) {
-		return null != this.ref.getAnnotation(QueryList.class);
+		return null != ele.getAnnotation(QueryList.class);
 	}
 
 	@Override

@@ -50,6 +50,7 @@ public final class DataEntryFactory {
 	}
 
 	public static String serialize(DbUniqu uniqu) throws UnsupportedEncodingException {
+		if(uniqu ==null) return "";
 		StringBuilder sb = new StringBuilder();
 		sb.append(Base64.encode(uniqu.getName()));
 
@@ -146,6 +147,7 @@ public final class DataEntryFactory {
 	}
 
 	public static String serialize(DataEntry entry) throws UnsupportedEncodingException {
+		if(null == entry) return "";
 		StringBuilder sb = new StringBuilder();
 
 		int kind = entry.getJavaKind();

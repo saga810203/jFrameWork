@@ -38,7 +38,7 @@ public class QueryValListHandler extends BaseQueryHandler {
 		if (fieldname == null)
 			throw new AptException(ref,
 					"Method[@" + QueryValList.class.getName() + "] must set @" + Column.class.getName() + "'value");
-		Class<? extends ColumnHandler> hc = col.handlerClass();
+		Class<? extends ColumnHandler> hc =  ColumnHandlerFactory.getHandlerClass(col,ref);
 		if (hc == null)
 			throw new AptException(ref, "Method[@" + QueryValList.class.getName() + "] must set @"
 					+ Column.class.getName() + "'handlerClass");

@@ -75,12 +75,12 @@ public class OraclePageQueryHandler extends BasePageQueryHandler {
 			.l("}else{")  
 			.l("sql.append(\" WHERE \");")
 			.l("}")
-			.bL("sql.append(\"ROWNUM <=").w(this.pageSizeName).el("\");");
+			.bL("sql.append(\"ROWNUM <=\").append(").w(this.pageSizeName).el(");");
 		}else{
 			if (null != this.wherePart) {
-				cw.bL("sql = sql +\" AND ROWNUM <=").w(this.pageSizeName).el("\";");
+				cw.bL("sql = sql +\" AND ROWNUM <=\"+").w(this.pageSizeName).el(";");
 			}else{
-				cw.bL("sql = sql +\" WHERE ROWNUM <=").w(this.pageSizeName).el("\";");
+				cw.bL("sql = sql +\" WHERE ROWNUM <=\"+").w(this.pageSizeName).el(";");
 			}
 		}
 		

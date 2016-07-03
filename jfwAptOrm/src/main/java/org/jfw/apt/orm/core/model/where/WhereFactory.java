@@ -12,11 +12,11 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.VariableElement;
 
 import org.jfw.apt.Util;
+import org.jfw.apt.annotation.Nullable;
 import org.jfw.apt.exception.AptException;
 import org.jfw.apt.model.MethodEntry;
 import org.jfw.apt.model.MethodParamEntry;
 import org.jfw.apt.orm.annotation.dao.Column;
-import org.jfw.apt.annotation.Nullable;
 import org.jfw.apt.orm.annotation.dao.method.Or;
 import org.jfw.apt.orm.annotation.dao.param.Alias;
 import org.jfw.apt.orm.annotation.dao.param.Equals;
@@ -50,8 +50,7 @@ public final class WhereFactory {
 			sqlcol = Util.emptyToNull(col.value());
 			if (sqlcol == null)
 				throw new AptException(ref, "invalid annotation value:@" + Column.class.getName());
-
-			handlerClass = col.handlerClass();
+			handlerClass = ColumnHandlerFactory.getHandlerClass(col,mpe.getRef());
 			if (handlerClass == null || (ColumnHandlerFactory.get(handlerClass) == null))
 				throw new AptException(ref, "invalid annotation value:@" + Column.class.getName());
 		} else {
@@ -89,7 +88,10 @@ public final class WhereFactory {
 				if (!tn.equals(sn)) {
 					Class<? extends ColumnHandler> related = ColumnHandlerFactory.getRelatedHandler(handlerClass);
 					if ((null == related) || (!tn.equals(ColumnHandlerFactory.get(related).supportsClass())))
-						throw new AptException(ref, "param Type unEquals ColumnHandler.supportClass");		
+						throw new AptException(ref, "param Type unEquals ColumnHandler.supportClass");
+					if(Util.isPrimitive(ColumnHandlerFactory.supportedType(handlerClass))){
+						nullable = true;
+					}
 					handlerClass = related;
 				}
 			}
@@ -101,7 +103,7 @@ public final class WhereFactory {
 			wc.setWhereSql(sqlName + " " + classEls.get(cls) + " ?");
 			wc.setCacheValue(false);
 			if (nullable)
-				result.add(wc);
+				result.addLast(wc);
 			else
 				result.addFirst(wc);
 		}
@@ -122,7 +124,10 @@ public final class WhereFactory {
 		if (!tn.equals(sn)) {
 			Class<? extends ColumnHandler> related = ColumnHandlerFactory.getRelatedHandler(handlerClass);
 			if ((null == related) || (!tn.equals(ColumnHandlerFactory.get(related).supportsClass())))
-				throw new AptException(ref, "param Type unEquals ColumnHandler.supportClass");		
+				throw new AptException(ref, "param Type unEquals ColumnHandler.supportClass");
+			if(Util.isPrimitive(ColumnHandlerFactory.supportedType(handlerClass))){
+				nullable = true;
+			}
 			handlerClass = related;
 		}
 		WhereColumn wc = new WhereColumn();

@@ -60,6 +60,7 @@ public class UpdateColumn {
 	
 	public void prepare(ClassWriter cw){
 		this.cwc = ColumnWriterCache.build(this.name, this.cacheValue, this.nullable, cw, ColumnHandlerFactory.get(this.handlerClass));
+		this.cwc.setDynamic(this.dynamic);
 		this.cwc.prepare();
 	}
 	

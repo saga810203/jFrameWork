@@ -17,11 +17,13 @@ import org.jfw.apt.orm.core.model.DataEntryFactory;
 public class QueryValHandler extends BaseQueryHandler {
 
 	private CalcColumn valColumn = new CalcColumn();
+	private boolean withNullable;
 
 	private String defaultValue;
 
 	@Override
 	public boolean match(Element ele) {
+		this.withNullable = null != ele.getAnnotation(Nullable.class);
 		return null != ele.getAnnotation(QueryVal.class);
 	}
 
@@ -40,7 +42,7 @@ public class QueryValHandler extends BaseQueryHandler {
 		if (fieldname == null)
 			throw new AptException(ref,
 					"Method[@" + QueryVal.class.getName() + "] must set @" + Column.class.getName() + "'value");
-		Class<? extends ColumnHandler> hc = col.handlerClass();
+		Class<? extends ColumnHandler> hc = ColumnHandlerFactory.getHandlerClass(col, ref);
 		if (hc == null)
 			throw new AptException(ref,
 					"Method[@" + QueryVal.class.getName() + "] must set @" + Column.class.getName() + "'handlerClass");
@@ -63,7 +65,11 @@ public class QueryValHandler extends BaseQueryHandler {
 		ColumnHandlerFactory.get(valColumn.getHandlerClass()).readValue(cw, "return ", ";", 1, false);
 		cw.l("}else{");
 		if (this.defaultValue == null) {
-			cw.l("throw new org.jfw.util.exception.JfwBaseException(201);");
+			if (this.withNullable
+					&& (!Util.isPrimitive(ColumnHandlerFactory.supportedType(this.valColumn.getHandlerClass()))))
+				cw.l("return null;");
+			else
+				cw.l("throw new org.jfw.util.exception.JfwBaseException(201);");
 		} else {
 			cw.bL("return ").ws(this.defaultValue).el(";");
 		}

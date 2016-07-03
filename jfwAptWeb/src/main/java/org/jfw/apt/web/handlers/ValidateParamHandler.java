@@ -11,9 +11,6 @@ import org.jfw.apt.web.handlers.validate.ParamValidateHandler;
 public final class ValidateParamHandler extends RequestHandler {
 	public static final ParamValidateHandler[] handlers = new ParamValidateHandler[] {};
 
-	private ValidateParamHandler() {
-	}
-
 	@Override
 	public void init() {
 	}

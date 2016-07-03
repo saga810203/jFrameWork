@@ -2,10 +2,12 @@ package org.jfw.apt.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ListIterator;
 
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.VariableElement;
+import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 
 import org.jfw.apt.exception.AptException;
@@ -32,18 +34,25 @@ public class MethodEntry {
 		me.name = ref.getSimpleName().toString();
 
 		List<? extends VariableElement> eles = ref.getParameters();
-		for (int i = 0; i < eles.size(); ++i) {
-			try {
-				me.params.add(MethodParamEntry.build(eles.get(i)));
-			} catch (Exception e) {
-				throw new AptException(eles.get(i), "unSupported Method parameterType");
-			}
+		for(ListIterator<? extends VariableElement> it = eles.listIterator();it.hasNext();){
+			VariableElement vEle = it.next();
+			MethodParamEntry mpe = MethodParamEntry.build(vEle);
+			me.params.add(mpe);
 		}
 
+
 		List<? extends TypeMirror> ths = ref.getThrownTypes();
-		for (int i = 0; i < ths.size(); ++i) {
-			me.exceptions.add(TypeName.get(ths.get(i)).toString());
+		for(ListIterator<? extends TypeMirror> it = ths.listIterator();it.hasNext();){
+			TypeMirror tm = it.next();
+			String en;
+			if(tm.getKind()==TypeKind.ERROR){
+				en = tm.toString();
+			}else{
+				en = TypeName.get(tm).toString();
+			}
+			me.exceptions.add(en);
 		}
+
 		return me;
 	}
 

@@ -133,7 +133,7 @@ public abstract class BaseQueryHandler extends BaseDaoHandler {
 		if (this.wherePart != null)
 			this.wherePart.prepare(cw);
 		if (this.dynamic) {
-			cw.l("Stringbuilder sql = new StringBuilder");
+			cw.l("StringBuilder sql = new StringBuilder();");
 			cw.bL("sql.append(\"SELECT");
 		} else {
 			cw.bL("String sql = \"SELECT");

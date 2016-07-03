@@ -28,6 +28,7 @@ public class DeleteHandler extends BaseManipulationHandler {
 		this.doReplaceSource = false;
 		String pn = this.me.getParams().get(1).getName();
 		this.wherePart = WhereFactory.build(this.fromTable, ref, pn);
+		this.wherePart.prepare(cw);
 		this.dynamic = false;
 		this.sqlparams.clear();
 		for (ListIterator<WhereColumn> it = this.wherePart.getColumns().listIterator(); it.hasNext();) {

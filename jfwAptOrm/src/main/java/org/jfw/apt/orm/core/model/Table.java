@@ -52,5 +52,11 @@ public class Table extends View{
 		}
 		return false;
 	}
+
+	@Override
+	public int getKind() {
+		return DataEntry.TABLE;
+	}
+	
 	
 }

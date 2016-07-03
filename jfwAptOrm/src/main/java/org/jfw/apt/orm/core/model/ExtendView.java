@@ -35,4 +35,9 @@ public class ExtendView extends View{
 		}
 		return this.allCols;
 	}
+
+	@Override
+	public int getKind() {
+		return DataEntry.EXTEND_VIEW;
+	}
 }

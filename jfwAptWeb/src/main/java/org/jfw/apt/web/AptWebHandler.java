@@ -9,7 +9,6 @@ import java.util.Map;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
-import javax.lang.model.element.TypeElement;
 
 import org.jfw.apt.CodeGenHandler;
 import org.jfw.apt.CodePartGenerator;
@@ -41,7 +40,6 @@ public class AptWebHandler extends CodeGenHandler {
 
 	protected int methodIndex = 1;
 	protected String url;
-	protected TypeElement ref;
 	protected Map<Object, CodePartGenerator> codes = new HashMap<Object, CodePartGenerator>();
 
 	protected String methodUrl;

@@ -7,8 +7,7 @@ import org.jfw.apt.out.ClassWriter;
 
 public abstract class AbstractColumnHandler implements ColumnHandler {
 
-	public static final String PARAM_INDE = AbstractColumnHandler.class.getName() + "_PARAM_INDEX";
-	private static final String PARAM_INDEX = null;
+	public static final String PARAM_INDEX = AbstractColumnHandler.class.getName() + "_PARAM_INDEX";
 
 	public abstract String getReadMethod();
 
@@ -25,7 +24,7 @@ public abstract class AbstractColumnHandler implements ColumnHandler {
 			cw.bL(this.supportsClass()).w(" ").w(lv).w(" = rs.").w(this.getReadMethod()).w("(").w(colIndex).el(");");
 			cw.beginIf().w("rs.wasNull()").endIf();
 			cw.bL(lv).el(" = null;");
-			cw.writeEndBrace();
+			cw.l("}");
 			cw.bL(beforCode == null ? "" : beforCode).w(lv).el(afterCode == null ? "" : afterCode);
 		}
 	}
@@ -36,7 +35,7 @@ public abstract class AbstractColumnHandler implements ColumnHandler {
 	}
 
 	public void checkParamIndex(ClassWriter cw) {
-		String pis = (String) (cw.getMethodScope().get(PARAM_INDE));
+		String pis = (String) (cw.getMethodScope().get(PARAM_INDEX));
 		if (pis == null) {
 			pis = cw.getMethodTempVarName();
 			cw.getMethodScope().put(PARAM_INDEX, pis);
@@ -45,7 +44,7 @@ public abstract class AbstractColumnHandler implements ColumnHandler {
 	}
 
 	public String getParamIndexName(ClassWriter cw) {
-		return (String) (cw.getMethodScope().get(PARAM_INDE));
+		return (String) (cw.getMethodScope().get(PARAM_INDEX));
 	}
 
 	public static String genKeyForCheckNullOrCache(String varName) {

@@ -61,7 +61,7 @@ public class ClassWriter {
 		this.sb = new StringBuilder();
 		int index = classname.lastIndexOf('.');
 		if (index > 0) {
-			sb.append("package ").append(classname.substring(0, index)).append(";\r\n");
+			sb.append("package ").append(classname.substring(0, index)).append(";\r\n\r\n");
 		}
 		if (annotationDescps != null) {
 			for (String s : annotationDescps)
@@ -77,7 +77,7 @@ public class ClassWriter {
 					sb.append(" implements ");
 				else
 					sb.append(",");
-				sb.append(annotationDescps[i]);
+				sb.append(impls[i]);
 			}
 		}
 		sb.append("{\r\n");
@@ -230,7 +230,7 @@ public class ClassWriter {
 	public ClassWriter writeClosing(String errVar) {
 		this.writeIndent();
 		sb.append("try{").append(errVar).append(".close();}catch(Exception ").append(this.getMethodTempVarName())
-				.append("){}}\r\n");
+				.append("){}\r\n");
 		return this;
 	}
 

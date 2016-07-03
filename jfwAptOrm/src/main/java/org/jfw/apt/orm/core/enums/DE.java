@@ -54,6 +54,19 @@ public enum DE {
 
 	streamBlob(StreamBlobHandler.class, "BLOB",false,true,true,false,null,null),
 	StreamBlob(StreamBlobHandler.class, "BLOB",false,true,true,false,null,null),
+	
+	email_de(StringHandler.class,"VARCHAR(50)",false,true,true,true,null,null),
+	email_de2(StringHandler.class,"VARCHAR2(50)",false,true,true,true,null,null),
+	
+	Email_de(StringHandler.class,"VARCHAR(50)",true,true,true,true,null,null),
+	Email_de2(StringHandler.class,"VARCHAR2(50)",true,true,true,true,null,null),
+	
+	mobilePhone_de(FixLenStringHandler.class,"CHAR(11)",false,true,true,true,null,null),
+	MobilePhone_de(FixLenStringHandler.class,"CHAR(11)",true,true,true,true,null,null),
+	
+	md5_de(FixLenStringHandler.class,"CHAR(32)",false,true,true,true,null,null),
+	Md5_de(FixLenStringHandler.class,"CHAR(32)",true,true,true,true,null,null)	
+	
 
 	;
 

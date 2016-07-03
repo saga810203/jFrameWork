@@ -31,6 +31,8 @@ public class PersistentObjectHandler extends AptHandler {
 	protected TypeElement ref;
 
 	protected Object annotationObj;
+	
+	protected Class<? extends Annotation> currentAnnotationClass;
 
 	protected int kind;
 
@@ -51,26 +53,27 @@ public class PersistentObjectHandler extends AptHandler {
 
 		for (Class<? extends Annotation> cls : supportedClass) {
 			this.annotationObj = this.ref.getAnnotation(cls);
-			if (null != this.annotationObj)
-				break;
+			if (null != this.annotationObj){
+				this.currentAnnotationClass = cls;
+				break;}
 		}
 		return null != this.annotationObj;
 	}
 
 	@Override
 	public void proccess() throws AptException {
-		if (this.annotationObj.getClass().equals(Table.class)) {
+		if (this.currentAnnotationClass.equals(Table.class)) {
 			new TableHandler().handle(this.ref);
 
-		} else if (this.annotationObj.getClass().equals(VirtualTable.class)) {
+		} else if (this.currentAnnotationClass.equals(VirtualTable.class)) {
 			new VirtualHandler().handle(this.ref);
 
-		} else if (this.annotationObj.getClass().equals(ExtendTable.class)) {
+		} else if (this.currentAnnotationClass.equals(ExtendTable.class)) {
 			new ExtendTableHandler().handle(this.ref);
 
-		} else if (this.annotationObj.getClass().equals(View.class)) {
+		} else if (this.currentAnnotationClass.equals(View.class)) {
 			new ViewHandler().handle(this.ref);
-		} else if (this.annotationObj.getClass().equals(ExtendView.class)) {
+		} else if (this.currentAnnotationClass.equals(ExtendView.class)) {
 			new ExtendViewHandler().handle(this.ref);
 		}
 	}

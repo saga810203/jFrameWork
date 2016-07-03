@@ -41,6 +41,9 @@ public class UpdateHandler extends BaseManipulationHandler {
 		
 		this.sqlparams.clear();
 		
+		this.updatePart.prepare(cw);
+		this.wherePart.prepare(cw);
+		
 		for (ListIterator<UpdateColumn> it = this.updatePart.getColumns().listIterator(); it.hasNext();) {
 			this.sqlparams.add(it.next().getCwc());
 		}
@@ -60,12 +63,8 @@ public class UpdateHandler extends BaseManipulationHandler {
 
 	@Override
 	protected void prepareSQL() {
-	
-		this.updatePart.prepare(cw);
-		this.wherePart.prepare(cw);
-
 		if (this.dynamic) {
-			cw.l("StringBuilder sql = new StringBulider();").bL("sql.append(\"UPDATE ")
+			cw.l("StringBuilder sql = new StringBuilder();").bL("sql.append(\"UPDATE ")
 					.w(this.fromTable.getFromSentence()).w(" SET ");
 			this.updatePart.WriteDynamic(cw);
 			cw.bL("sql.append(\" ");

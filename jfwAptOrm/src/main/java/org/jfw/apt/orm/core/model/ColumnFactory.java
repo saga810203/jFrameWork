@@ -80,6 +80,9 @@ public final class ColumnFactory {
 		if(nullable && Util.isPrimitive(ColumnHandlerFactory.get(handlerClass).supportsClass()))
 			nullable = false;
 		
+		fixSqlValueWithInsert = Util.emptyToNull(fixSqlValueWithInsert);
+		fixSqlValueWithUpdate = Util.emptyToNull(fixSqlValueWithUpdate);
+		
 		Column col = findColumn(handlerClass, nullable, javaType, sqlName, javaName, queryable, dbType,
 				fixSqlValueWithInsert, fixSqlValueWithUpdate, insertable, renewable);
 		if (col == null) {

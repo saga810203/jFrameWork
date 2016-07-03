@@ -232,7 +232,7 @@ public final class ClassName extends TypeName {
 	public static ClassName get(TypeElement element) {
 		LinkedList<String> names = new LinkedList<String>();
 		for (Element e = element; isClassOrInterface(e); e = e.getEnclosingElement()) {
-			if (element.getNestingKind() == TOP_LEVEL || element.getNestingKind() == MEMBER)
+			if (element.getNestingKind() != TOP_LEVEL && element.getNestingKind() != MEMBER)
 				throw new IllegalArgumentException("unexpected type testing");
 			names.addFirst(e.getSimpleName().toString());
 		}

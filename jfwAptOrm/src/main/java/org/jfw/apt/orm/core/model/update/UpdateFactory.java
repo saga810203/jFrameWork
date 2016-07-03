@@ -114,7 +114,6 @@ public final class UpdateFactory {
 			el = "=?";
 
 		boolean withDynamic = null != mpe.getRef().getAnnotation(Dynamic.class);
-		boolean withNullable = null != mpe.getRef().getAnnotation(Nullable.class);
 
 		String paramType = mpe.getTypeName();
 
@@ -140,9 +139,12 @@ public final class UpdateFactory {
 			
 			if(!Util.isPrimitive(paramType)){
 				withDynamic = true;	
-				withNullable = true;
 			}
 		}
+		if((!col.isNullable()) && ( null != mpe.getRef().getAnnotation(Nullable.class)) ){
+			withDynamic = true;
+		}
+		
 		UpdateColumn uc = new UpdateColumn();
 		uc.setName(fn);
 		uc.setCacheValue(false);
@@ -153,26 +155,15 @@ public final class UpdateFactory {
 			uc.setDynamic(false);
 			list.addFirst(uc);
 			return;
-		}
-		if (!col.isNullable()) {
-			uc.setNullable(false);
-			if (withNullable) {
-				uc.setDynamic(true);
-				list.addLast(uc);
-			} else {
-				uc.setDynamic(false);
-				list.addFirst(uc);
-			}
-		} else {
-			if (withDynamic) {
-				uc.setDynamic(true);
-				uc.setNullable(false);
-				list.addLast(uc);
-			} else {
-				uc.setDynamic(false);
-				uc.setNullable(true);
-				list.addFirst(uc);
-			}
+		}else if(withDynamic){
+			uc.setDynamic(true);
+			uc.setNullable(true);
+			list.addLast(uc);
+			
+		}else{
+			uc.setDynamic(false);
+			uc.setNullable(col.isNullable());
+			list.addFirst(uc);
 		}
 	}
 

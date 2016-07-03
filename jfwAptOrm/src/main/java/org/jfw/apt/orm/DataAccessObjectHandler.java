@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.ListIterator;
 
 import javax.lang.model.element.Element;
+import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
 
 import org.jfw.apt.CodeGenHandler;
@@ -92,11 +93,14 @@ public class DataAccessObjectHandler extends CodeGenHandler {
 	public void proccess() throws AptException {
 		List<? extends Element> eles = ref.getEnclosedElements();
 		for (Element ele : eles) {
-			for (ListIterator<DaoHandler> it = getDaoHandlers().listIterator(); it.hasNext();) {
-				DaoHandler dao = it.next();
-				if (dao.match(ele)) {
-					dao.proccess(MethodEntry.build((ExecutableElement) ele), this);
-					break;
+			if(ele.getKind() == ElementKind.METHOD){
+				MethodEntry mmm = MethodEntry.build((ExecutableElement) ele);
+				for (ListIterator<DaoHandler> it = getDaoHandlers().listIterator(); it.hasNext();) {
+					DaoHandler dao = it.next();
+					if (dao.match(ele)) {
+						dao.proccess(mmm, this);
+						break;
+					}
 				}
 			}
 		}
