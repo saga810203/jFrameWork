@@ -89,7 +89,7 @@ public class DataAccessObjectHandler extends CodeGenHandler {
 
 	@Override
 	public void genAnnotations() {
-		this.annotationDescps = new String[] { "@org.jfw.apt.annotation.Bean(\"" + this.sourceClassname + "\")" };
+		this.annotationDescps = null;//new String[] { "@org.jfw.apt.annotation.Bean(\"" + this.sourceClassname + "\")" };
 	}
 
 	@Override
@@ -113,7 +113,7 @@ public class DataAccessObjectHandler extends CodeGenHandler {
 		}
 		out.overClass();
 		ClassBeanDefine cbd = this.jfwProccess.getBeanConfig()
-				.addServiceBeanByClass(this.ref.getQualifiedName().toString(), null);
+				.addServiceBeanByClass(this.targetClassname, this.ref.getQualifiedName().toString().replaceAll("\\.","_"));
 		Util.buildAtuowrieProperty(cbd, this.ref);
 	}
 

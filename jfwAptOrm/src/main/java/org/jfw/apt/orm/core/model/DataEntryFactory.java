@@ -150,7 +150,7 @@ public final class DataEntryFactory {
 		if(null == entry) return "";
 		StringBuilder sb = new StringBuilder();
 
-		int kind = entry.getJavaKind();
+		int kind = entry.getKind();
 		sb.append(kind) // 0
 				.append(",").append(entry.getJavaKind()) // 1
 				.append(",").append(entry.getJavaName()) // 2
@@ -182,7 +182,7 @@ public final class DataEntryFactory {
 			entry = new Table();
 			((Table) entry).setFromSentence(Base64.decode(ss[4]));
 			((Table) entry).setPrimaryKey(deSerializeDbUniqu(ss[5]));
-			((Table) entry).setUniqus(deSerializeDbUniquss(ss[6]));
+			((Table) entry).setUniqus(deSerializeDbUniquss(ss.length>6?ss[6]:null));
 		} else if (kind == DataEntry.VIEW) {
 			entry = new View();
 			((View) entry).setFromSentence(Base64.decode(ss[4]));
@@ -197,8 +197,8 @@ public final class DataEntryFactory {
 		} else
 			throw new IllegalArgumentException("read orm define error: invalid dataEntry'kind");
 		entry.setJavaKind(Integer.parseInt(ss[1]));
-		entry.setJavaKind(Integer.parseInt(ss[2]));
-		entry.setColumns(deSerializeColumns(ss[6]));
+		entry.setJavaName(ss[2]);
+		entry.setColumns(deSerializeColumns(ss[3]));
 		return entry;
 
 	}
@@ -334,7 +334,7 @@ public final class DataEntryFactory {
 				} else {
 					sb.append(",");
 				}
-				sb.append(col.getDbType());
+				sb.append(col.getSqlName());
 				
 				
 			}

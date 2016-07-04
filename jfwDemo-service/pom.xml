@@ -17,7 +17,7 @@
 			<artifactId>jfwDemo-orm</artifactId>
 			<version>${project.version}</version>
 		</dependency>
-		<!-- <dependency>
+		<dependency>
 			<groupId>org.jfw</groupId>
 			<artifactId>jfwAptOrm</artifactId>
 			<version>${project.version}</version>
@@ -34,9 +34,14 @@
 		</dependency>
 		<dependency>
 			<groupId>org.jfw</groupId>
-			<artifactId>jfw</artifactId>
+			<artifactId>jfwWebUtil</artifactId>
 			<version>${project.version}</version>
-		</dependency> -->
+		</dependency>
+		<dependency>
+			<groupId>org.jfw</groupId>
+			<artifactId>jfwApt</artifactId>
+			<version>${project.version}</version>
+		</dependency>
 	</dependencies>
 	<build>
 		<plugins>
