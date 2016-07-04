@@ -11,8 +11,19 @@ public class WherePart {
 	private boolean dynamic;
 
 	private String staticSentence;
+	
+	private boolean batch;
 
 	private LinkedList<WhereColumn> columns = new LinkedList<WhereColumn>();
+
+	
+	public boolean isBatch() {
+		return batch;
+	}
+
+	public void setBatch(boolean batch) {
+		this.batch = batch;
+	}
 
 	public boolean isAnd() {
 		return and;
@@ -100,14 +111,24 @@ public class WherePart {
 			if (this.columns.size() > 1) {
 				String tmpVar = cw.getMethodTempVarName();
 				cw.bL("boolean ").w(tmpVar).el(" = true;");
+				first = true;
 				for (ListIterator<WhereColumn> it = this.columns.listIterator(); it.hasNext();) {
 					WhereColumn wc = it.next();
+					if(first){
+						first = false;
+						cw.bL("if(!").w(wc.getCwc().getCheckNullVar()).el("){");
+							cw.bL(tmpVar).el(" =  false;");
+							cw.bL("sql.append(\" WHERE ").ws(wc.getWhereSql()).el("\");");
+						cw.l("}");
+					}else{
 					cw.bL("if(!").w(wc.getCwc().getCheckNullVar()).el("){");
-					cw.bL("if(").w(tmpVar).el("){").bL(tmpVar).el(" =  false;").l("sql.append(\" WHERE \");")
-							.l("}else{").bL("sql.append(\" ").w(and ? "AND " : "OR ").el("\");").l("}");
-
-					cw.bL("sql.append(\"").ws(wc.getWhereSql()).el("\");");
-					cw.l("}");
+						cw.bL("if(").w(tmpVar).el("){");
+							cw.bL(tmpVar).el(" =  false;");
+							cw.bL("sql.append(\" WHERE ").ws(wc.getWhereSql()).el("\");");
+						cw.l("}else{");
+							cw.bL("sql.append(\" ").w(and ? "AND " : "OR ").ws(wc.getWhereSql()).el("\");");
+						cw.l("}");
+					cw.l("}");}
 				}
 			} else {
 				WhereColumn wc = this.columns.getFirst();

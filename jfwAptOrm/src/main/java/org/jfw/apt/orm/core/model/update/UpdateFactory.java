@@ -25,7 +25,7 @@ import org.jfw.apt.orm.core.model.Table;
 
 public final class UpdateFactory {
 
-	private static String getStaticUpdateSetSentence(Element method) {
+	public static String getStaticUpdateSetSentence(Element method) {
 		SetSentence ss = method.getAnnotation(SetSentence.class);
 		if (null == ss)
 			return "";
@@ -146,7 +146,7 @@ public final class UpdateFactory {
 		}
 		
 		UpdateColumn uc = new UpdateColumn();
-		uc.setName(fn);
+		uc.setName(mpe.getName());
 		uc.setCacheValue(false);
 		uc.setSetSql(col.getSqlName() + el);
 		uc.setHandlerClass(handlerClass);

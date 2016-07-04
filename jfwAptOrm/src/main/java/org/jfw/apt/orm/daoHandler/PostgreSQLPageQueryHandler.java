@@ -1,9 +1,28 @@
 package org.jfw.apt.orm.daoHandler;
 
+import javax.lang.model.element.Element;
+
+import org.jfw.apt.AptConfig;
+import org.jfw.apt.Util;
+import org.jfw.apt.orm.annotation.dao.method.operator.PageQuery;
+
 public class PostgreSQLPageQueryHandler extends BasePageQueryHandler {
 
 	protected String lastPage;
 	protected String beginIndex;
+	
+	public boolean match(Element ele) {
+		PageQuery pq = ele.getAnnotation(PageQuery.class);
+		if(pq == null) return false;
+		String dv =Util.emptyToNull(pq.value());
+		if(dv == null){
+			if(AptConfig.get("DB_PAGE:PostgreSQL")!= null) return true;
+			return false;
+		}else{
+			if(dv.equals("PostgreSQL")) return true;
+			return false;
+		}
+	}
 		
 	@Override
 	protected String getSelectFieldWithRecordCount() {
@@ -21,12 +40,10 @@ public class PostgreSQLPageQueryHandler extends BasePageQueryHandler {
 	@Override
 	protected void doAfterOrderByForFirstPage() {
 		if(dynamic){
-			cw.bL("sql.append(\" LIMIT \").append(").w(this.pageSizeName).w(").append(\" OFFSET \").append(").w(this.beginIndex)
-			.el(");");
+			cw.bL("sql.append(\" LIMIT \").append(").w(this.pageSizeName).el(");");
 		}else{
-			cw.bL("sql = sql + \" LIMIT \" + ").w(this.pageSizeName).w("+ \" OFFSET \"+").w(this.beginIndex).el(";");
+			cw.bL("sql = sql + \" LIMIT \" + ").w(this.pageSizeName).el(";");
 		}
-
 	}
 
 	@Override
@@ -39,15 +56,13 @@ public class PostgreSQLPageQueryHandler extends BasePageQueryHandler {
 
 	@Override
 	protected void doAfterOrderByForNotFirstPage() {
-		
+	
 		if(dynamic){
-			cw.bL("sql.append(\" LIMIT \").append(").w(this.pageSizeName).el(");");
+			cw.bL("sql.append(\" LIMIT \").append(").w(this.pageSizeName).w(").append(\" OFFSET \").append(").w(this.beginIndex)
+			.el(");");
 		}else{
-			cw.bL("sql = sql + \" LIMIT \" + ").w(this.pageSizeName).el(";");
+			cw.bL("sql = sql + \" LIMIT \" + ").w(this.pageSizeName).w("+ \" OFFSET \"+").w(this.beginIndex).el(";");
 		}
-
-		
-			
 	}
 
 	@Override

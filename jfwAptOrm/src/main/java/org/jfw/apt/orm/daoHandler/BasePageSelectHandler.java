@@ -3,8 +3,6 @@ package org.jfw.apt.orm.daoHandler;
 import java.util.Arrays;
 import java.util.ListIterator;
 
-import javax.lang.model.element.Element;
-
 import org.jfw.apt.exception.AptException;
 import org.jfw.apt.model.MethodParamEntry;
 import org.jfw.apt.orm.annotation.dao.method.operator.PageSelect;
@@ -15,14 +13,7 @@ import org.jfw.apt.orm.core.model.DataEntryFactory;
 import org.jfw.apt.orm.core.model.where.WhereFactory;
 
 public abstract class BasePageSelectHandler extends BasePageQueryHandler {
-	
-	
 
-	@Override
-	public boolean match(Element ele) {
-		return null!=ele.getAnnotation(PageSelect.class);
-	}
-	
 	@Override
 	protected String getDefReturnClassName() throws AptException {
 		this.pageNoName = null;

@@ -3,8 +3,6 @@ package org.jfw.apt.orm.daoHandler;
 import java.util.Arrays;
 import java.util.ListIterator;
 
-import javax.lang.model.element.Element;
-
 import org.jfw.apt.exception.AptException;
 import org.jfw.apt.model.MethodParamEntry;
 import org.jfw.apt.orm.annotation.dao.method.operator.PageQuery;
@@ -23,10 +21,7 @@ public abstract class BasePageQueryHandler extends BaseQueryHandler {
 
 	protected String whereSqlName;
 
-	@Override
-	public boolean match(Element ele) {
-		return null != ele.getAnnotation(PageQuery.class);
-	}
+
 
 	@Override
 	protected String getDefReturnClassName() throws AptException {
@@ -252,8 +247,11 @@ public abstract class BasePageQueryHandler extends BaseQueryHandler {
 		cw.w(" FROM ").ws(this.fromSentence);
 		cw.el("\");");
 		if (this.dynamic) {
+			if(this.wherePart.hasStaticPart()){
+				cw.bL("sql.append(").w(this.whereSqlName).el(");");
+			}else{
 			cw.bL("if(").w(this.whereSqlName).el(".length()>0){").bL("sql.append(").w(this.whereSqlName).el(");")
-					.l("}");
+					.l("}");}
 			doAfterWhereForNotFirstPage();
 			if (null != this.orderBy)
 				cw.bL("sql.append(\" ").ws(this.orderBy).el("\");");

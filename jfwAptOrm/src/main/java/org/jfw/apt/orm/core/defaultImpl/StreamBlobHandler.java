@@ -43,7 +43,7 @@ public class StreamBlobHandler extends AbstractColumnHandler{
 			if (dynamicValue) {
 				cw.bL("if(!").w(cwc.getCheckNullVar()).el("){");				
 				cw.bL(blobName).el(" =  con.createBlob();");
-				cw.bL("org.jfw.util.io.IoUtil.copy(").w(cwc.getCacheValVar()).w(",").w(blobName).el(".setBinaryStream(1),true,true);");
+				cw.bL("org.jfw.util.io.IoUtil.copy(").w(cwc.isUseTmpVar() ? cwc.getCacheValVar() : cwc.getValEl()).w(",").w(blobName).el(".setBinaryStream(1),true,true);");
 				cw.bL("ps.setBlob(").w(this.getParamIndexName(cw)).w("++,")	.w(blobName).el(");");
 				cw.l("}");
 			} else {
@@ -51,14 +51,14 @@ public class StreamBlobHandler extends AbstractColumnHandler{
 				cw.bL("ps.setNull(").w(this.getParamIndexName(cw)).w("++,").w(java.sql.Types.BLOB).el(");");
 				cw.l("}else{");
 				cw.bL(blobName).el(" =  con.createBlob();");
-				cw.bL("org.jfw.util.io.IoUtil.copy(").w(cwc.getCacheValVar()).w(",").w(blobName).el(".setBinaryStream(1),true,true);");
-				cw.bL("ps.Blob(").w(this.getParamIndexName(cw)).w("++,").w(blobName).el(");");
+				cw.bL("org.jfw.util.io.IoUtil.copy(").w(cwc.isUseTmpVar() ? cwc.getCacheValVar() : cwc.getValEl()).w(",").w(blobName).el(".setBinaryStream(1),true,true);");
+				cw.bL("ps.setBlob(").w(this.getParamIndexName(cw)).w("++,").w(blobName).el(");");
 				cw.l("}");
 			}
 		} else {
 			cw.bL(blobName).el(" =  con.createBlob();");
-			cw.bL("org.jfw.util.io.IoUtil.copy(").w(cwc.getCacheValVar()==null?cwc.getValEl():cwc.getCheckNullVar()).w(",").w(blobName).el(".setBinaryStream(1),true,true);");
-			cw.bL("ps.Blob(").w(this.getParamIndexName(cw)).w("++,").w(blobName).el(");");
+			cw.bL("org.jfw.util.io.IoUtil.copy(").w(cwc.isUseTmpVar() ? cwc.getCacheValVar() : cwc.getValEl()).w(",").w(blobName).el(".setBinaryStream(1),true,true);");
+			cw.bL("ps.setBlob(").w(this.getParamIndexName(cw)).w("++,").w(blobName).el(");");
 		}
 	}
 

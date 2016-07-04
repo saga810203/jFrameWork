@@ -14,18 +14,25 @@ import org.jfw.apt.exception.AptException;
 import org.jfw.apt.model.MethodEntry;
 import org.jfw.apt.orm.annotation.dao.DAO;
 import org.jfw.apt.orm.daoHandler.DaoHandler;
+import org.jfw.apt.orm.daoHandler.DeleteBatchHandler;
 import org.jfw.apt.orm.daoHandler.DeleteHandler;
+import org.jfw.apt.orm.daoHandler.DeleteWithBatchHandler;
 import org.jfw.apt.orm.daoHandler.DeleteWithHandler;
+import org.jfw.apt.orm.daoHandler.InsertBatchHandler;
 import org.jfw.apt.orm.daoHandler.InsertHandler;
 import org.jfw.apt.orm.daoHandler.OraclePageQueryHandler;
 import org.jfw.apt.orm.daoHandler.OraclePageSelectHandler;
+import org.jfw.apt.orm.daoHandler.PostgreSQLPageQueryHandler;
+import org.jfw.apt.orm.daoHandler.PostgreSQLPageSelectHandler;
 import org.jfw.apt.orm.daoHandler.QueryListHandler;
 import org.jfw.apt.orm.daoHandler.QueryOneHandler;
 import org.jfw.apt.orm.daoHandler.QueryValHandler;
 import org.jfw.apt.orm.daoHandler.QueryValListHandler;
 import org.jfw.apt.orm.daoHandler.SelectListHandler;
 import org.jfw.apt.orm.daoHandler.SelectOneHandler;
+import org.jfw.apt.orm.daoHandler.UpdateBatchHandler;
 import org.jfw.apt.orm.daoHandler.UpdateHandler;
+import org.jfw.apt.orm.daoHandler.UpdateWithBatchHandler;
 import org.jfw.apt.orm.daoHandler.UpdateWithHandler;
 import org.jfw.apt.out.model.ClassBeanDefine;
 
@@ -93,7 +100,7 @@ public class DataAccessObjectHandler extends CodeGenHandler {
 	public void proccess() throws AptException {
 		List<? extends Element> eles = ref.getEnclosedElements();
 		for (Element ele : eles) {
-			if(ele.getKind() == ElementKind.METHOD){
+			if (ele.getKind() == ElementKind.METHOD) {
 				MethodEntry mmm = MethodEntry.build((ExecutableElement) ele);
 				for (ListIterator<DaoHandler> it = getDaoHandlers().listIterator(); it.hasNext();) {
 					DaoHandler dao = it.next();
@@ -125,10 +132,13 @@ public class DataAccessObjectHandler extends CodeGenHandler {
 		supportedClass.add(QueryListHandler.class);
 		supportedClass.add(QueryValHandler.class);
 		supportedClass.add(QueryValListHandler.class);
-		supportedClass.add(OraclePageQueryHandler.class);
-		// supportedClass.add(PostgreSQLPageQueryHandler.class);
+
+		supportedClass.add(PostgreSQLPageQueryHandler.class);
+		supportedClass.add(PostgreSQLPageSelectHandler.class);
+
 		supportedClass.add(OraclePageSelectHandler.class);
-		// supportedClass.add(PostgreSQLPageSelectHandler.class);
+		supportedClass.add(OraclePageQueryHandler.class);
+
 		supportedClass.add(SelectOneHandler.class);
 		supportedClass.add(SelectListHandler.class);
 
@@ -137,6 +147,12 @@ public class DataAccessObjectHandler extends CodeGenHandler {
 		supportedClass.add(DeleteHandler.class);
 		supportedClass.add(UpdateWithHandler.class);
 		supportedClass.add(DeleteWithHandler.class);
+
+		supportedClass.add(InsertBatchHandler.class);
+		supportedClass.add(UpdateBatchHandler.class);
+		supportedClass.add(DeleteBatchHandler.class);
+		supportedClass.add(UpdateWithBatchHandler.class);
+		supportedClass.add(DeleteWithBatchHandler.class);
 
 	}
 

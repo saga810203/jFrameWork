@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.ListIterator;
 
 import org.jfw.apt.exception.AptException;
+import org.jfw.apt.model.MethodParamEntry;
 import org.jfw.apt.orm.annotation.dao.Batch;
 import org.jfw.apt.orm.annotation.dao.method.From;
 import org.jfw.apt.orm.core.ColumnWriterCache;
@@ -27,6 +28,8 @@ public abstract class BaseManipulationHandler extends BaseDaoHandler {
 	protected Table fromTable;
 
 	protected boolean doReplaceSource;
+	
+	protected String batchLengthVariableName ;
 
 	@Override
 	protected void prepare() throws AptException {
@@ -36,6 +39,7 @@ public abstract class BaseManipulationHandler extends BaseDaoHandler {
 	@Override
 	protected void writeMethodContent() throws AptException {
 		this.prepareTable();
+		if(this.batch) this.genBatchLengthVariableName();
 		this.prepareSqlParams();
 
 		if (this.batch && this.dynamic)
@@ -60,17 +64,19 @@ public abstract class BaseManipulationHandler extends BaseDaoHandler {
 			cw.l("return ps.executeUpdate();");
 		}
 		cw.l("}finally{").writeClosing("ps").l("}");
+		if(!this.batch){
 		if (this.doReplaceSource) {
 			cw.l("}finally{");
 			this.replaceResource();
 			cw.l("}");
+		}
 		}
 
 	}
 
 	protected abstract void prepareSqlParams() throws AptException;
 
-	protected void handleSqlParameters() {
+	protected void handleSqlParameters() throws AptException {
 		for (ListIterator<ColumnWriterCache> it = this.sqlparams.listIterator(); it.hasNext();) {
 			it.next().writeValue();
 		}
@@ -131,5 +137,26 @@ public abstract class BaseManipulationHandler extends BaseDaoHandler {
 		}
 
 	}
-
+	
+	protected void genBatchLengthVariableName() throws AptException{
+		if(this.byEntry){
+			cw.bL("if(").w(this.params.get(1).getName()).w(this.byList?".isEmpty()":".length ==0").el(") return new int[0];");
+			return;			
+		}
+		boolean first = true;
+		for(ListIterator<MethodParamEntry> it = this.params.listIterator();it.hasNext();){
+			if(first){
+				first = false;
+			}else{
+				MethodParamEntry mpe = it.next();
+				if(null!= mpe.getRef().getAnnotation(Batch.class)){
+					this.batchLengthVariableName = cw.getMethodTempVarName();
+					cw.bL("int ").w(batchLengthVariableName).w(" = ").w(mpe.getName()).el(".length;");
+					cw.bL("if(0==").w(this.batchLengthVariableName).el(") return new int[0];");
+					return ;			
+				}
+			}
+		}
+		throw new AptException(this.ref,"not found parameter with @"+Batch.class.getName());
+	}
 }

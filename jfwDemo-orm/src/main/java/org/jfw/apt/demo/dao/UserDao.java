@@ -1,5 +1,6 @@
 package org.jfw.apt.demo.dao;
 
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
@@ -21,6 +22,7 @@ import org.jfw.apt.orm.annotation.dao.method.operator.SelectList;
 import org.jfw.apt.orm.annotation.dao.method.operator.SelectOne;
 import org.jfw.apt.orm.annotation.dao.method.operator.Update;
 import org.jfw.apt.orm.annotation.dao.method.operator.UpdateWith;
+import org.jfw.apt.orm.annotation.dao.param.Alias;
 import org.jfw.apt.orm.annotation.dao.param.Equals;
 import org.jfw.apt.orm.annotation.dao.param.GtEq;
 import org.jfw.apt.orm.annotation.dao.param.Like;
@@ -32,15 +34,17 @@ import org.jfw.util.exception.JfwBaseException;
 
 @DAO
 public interface UserDao {
+	
+	
 	@Insert
-	int insert(Connection con, User user) throws SQLException;
+	int insert(Connection con, User user) throws SQLException,IOException;
 
 	@Update
-	int update(Connection con, User user) throws SQLException;
+	int update(Connection con, User user) throws SQLException,IOException;
 
 	@Dynamic
 	@Update
-	int updateDynamic(Connection con, User user) throws SQLException;
+	int updateDynamic(Connection con, User user) throws SQLException,IOException;
 
 	@SelectList
 	@OrderBy("ORDER BY ID")
@@ -60,6 +64,7 @@ public interface UserDao {
 			Boolean actived,boolean male ) throws SQLException;
 	
 	@PageQuery
+	@OrderBy("ORDER BY NAME")
 	PageQueryResult<User> pageQuery(Connection con, @Like @Nullable String name,
 			@GtEq @Column(handlerClass = StringHandler.class, value = "BIRTH") @Nullable String gBirth,
 			@LtEq @Column(handlerClass = StringHandler.class, value="BIRTH") @Nullable String lBirth,
@@ -67,9 +72,11 @@ public interface UserDao {
 	
 	@PageSelect
 	PageQueryResult<User> pageQuery(Connection con, @Like @Nullable String name,
-			@GtEq @Column(handlerClass = StringHandler.class, value = "BIRTH") @Nullable String gBirth,
-			@LtEq @Column(handlerClass = StringHandler.class, value="BIRTH") @Nullable String lBirth,
+			@GtEq @Alias("birth") @Nullable String gBirth,
+			@LtEq @Alias("birth") @Nullable String lBirth,
 			Boolean actived,int pageSize,int pageNo) throws SQLException;
+	
+	
 
 	@Nullable
 	@SelectOne

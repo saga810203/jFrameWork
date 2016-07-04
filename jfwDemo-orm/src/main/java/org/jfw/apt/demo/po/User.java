@@ -1,5 +1,7 @@
 package org.jfw.apt.demo.po;
 
+import java.io.InputStream;
+
 import org.jfw.apt.demo.po.abstracted.ActivedSupported;
 import org.jfw.apt.demo.po.abstracted.CreateTimeSupported;
 import org.jfw.apt.demo.po.abstracted.IdSupported;
@@ -16,6 +18,7 @@ public class User implements IdSupported, CreateTimeSupported, ActivedSupported,
 	private String createTime;
 	private String modifyTime;
 	private boolean actived;
+	private InputStream in;
 	/***************************************/
 	
 	private String name;
@@ -119,5 +122,15 @@ public class User implements IdSupported, CreateTimeSupported, ActivedSupported,
 	public void setId(String id) {
 		this.id = id;
 	}
+	@Column(DE.streamBlob)
+	public InputStream getIn() {
+		return in;
+	}
+
+	public void setIn(InputStream in) {
+		this.in = in;
+	}
+	
+	
 
 }

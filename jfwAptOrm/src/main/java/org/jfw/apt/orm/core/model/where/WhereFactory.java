@@ -35,9 +35,9 @@ import org.jfw.apt.orm.core.model.DbUniqu;
 import org.jfw.apt.orm.core.model.Table;
 
 public final class WhereFactory {
-	private static List<Class<? extends Annotation>> supportedClass = new ArrayList<Class<? extends Annotation>>();
+	public static List<Class<? extends Annotation>> supportedClass = new ArrayList<Class<? extends Annotation>>();
 
-	private static Map<Class<? extends Annotation>, String> classEls = new HashMap<Class<? extends Annotation>, String>();
+	public static Map<Class<? extends Annotation>, String> classEls = new HashMap<Class<? extends Annotation>, String>();
 
 	public static Object[] validWhereParameter(MethodParamEntry mpe, DataEntry entry) throws AptException {
 		VariableElement ref = mpe.getRef();
@@ -195,6 +195,9 @@ public final class WhereFactory {
 		return result;
 	}
 
+	
+	
+	
 	public static String getStaticWhereSql(Element methodRef) {
 		org.jfw.apt.orm.annotation.dao.method.Where ws = methodRef
 				.getAnnotation(org.jfw.apt.orm.annotation.dao.method.Where.class);

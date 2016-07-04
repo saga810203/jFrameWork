@@ -1,11 +1,30 @@
 package org.jfw.apt.orm.daoHandler;
 
-public class PostgresSQLPageSelectHandler extends BasePageSelectHandler {
+import javax.lang.model.element.Element;
+
+import org.jfw.apt.AptConfig;
+import org.jfw.apt.Util;
+import org.jfw.apt.orm.annotation.dao.method.operator.PageSelect;
+
+public class PostgreSQLPageSelectHandler extends BasePageSelectHandler {
 
 
 	protected String lastPage;
 	protected String beginIndex;
-		
+	
+	@Override
+	public boolean match(Element ele) {
+		PageSelect pq = ele.getAnnotation(PageSelect.class);
+		if(pq == null) return false;
+		String dv =Util.emptyToNull(pq.value());
+		if(dv == null){
+			if(AptConfig.get("DB_PAGE:PostgreSQL")!= null) return true;
+			return false;
+		}else{
+			if(dv.equals("PostgreSQL")) return true;
+			return false;
+		}
+	}
 	@Override
 	protected String getSelectFieldWithRecordCount() {
 		return "COUNT(1)";
@@ -20,7 +39,7 @@ public class PostgresSQLPageSelectHandler extends BasePageSelectHandler {
 	}
 
 	@Override
-	protected void doAfterOrderByForFirstPage() {
+	protected void doAfterOrderByForNotFirstPage() {
 		if(dynamic){
 			cw.bL("sql.append(\" LIMIT \").append(").w(this.pageSizeName).w(").append(\" OFFSET \").append(").w(this.beginIndex)
 			.el(");");
@@ -39,7 +58,7 @@ public class PostgresSQLPageSelectHandler extends BasePageSelectHandler {
 	}
 
 	@Override
-	protected void doAfterOrderByForNotFirstPage() {
+	protected void doAfterOrderByForFirstPage() {
 		
 		if(dynamic){
 			cw.bL("sql.append(\" LIMIT \").append(").w(this.pageSizeName).el(");");

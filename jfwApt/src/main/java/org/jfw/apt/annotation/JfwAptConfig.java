@@ -1,12 +1,12 @@
-package org.jfw.apt.orm.annotation.dao.method.operator;
+package org.jfw.apt.annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-@Target(ElementType.METHOD)
+@Target({ElementType.TYPE})
 @Retention(RetentionPolicy.SOURCE)
-public @interface PageQuery {
-	String value() default "";
+public @interface JfwAptConfig {
+	String value();
 }

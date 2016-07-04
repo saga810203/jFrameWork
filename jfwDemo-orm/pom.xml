@@ -9,6 +9,7 @@
 	<artifactId>jfwDemo-orm</artifactId>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<postgresql>true</postgresql>
 	</properties>
 
 	<dependencies>
@@ -42,6 +43,9 @@
 				<configuration>
 					<source>1.7</source>
 					<target>1.7</target>
+					<compilerArgs>
+						<compilerArg>-g:none</compilerArg>
+					</compilerArgs>
 				</configuration>
 			</plugin>
 		</plugins>
