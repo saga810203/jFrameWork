@@ -9,7 +9,8 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.SOURCE)
 public @interface FieldParam {
 	String value();
-	String valueClassName() default "";
+	Class<?> valueClass();
 	String paramName() default "";
 	String defaultValue() default "";
+	boolean required() default true;
 }

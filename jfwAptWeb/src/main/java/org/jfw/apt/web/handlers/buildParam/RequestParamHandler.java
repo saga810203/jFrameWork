@@ -6,7 +6,6 @@ import java.util.Map;
 
 import javax.lang.model.element.VariableElement;
 
-import org.jfw.apt.Util;
 import org.jfw.apt.exception.AptException;
 import org.jfw.apt.model.ClassName;
 import org.jfw.apt.model.MethodParamEntry;
@@ -14,8 +13,8 @@ import org.jfw.apt.model.TypeName;
 import org.jfw.apt.out.ClassWriter;
 import org.jfw.apt.web.AptWebHandler;
 import org.jfw.apt.web.annotation.param.RequestParam;
-import org.jfw.apt.web.model.RequestParamModel;
 import org.jfw.apt.web.model.Field;
+import org.jfw.apt.web.model.RequestParamModel;
 
 public final class RequestParamHandler implements BuildParameter {
 	public static final RequestParamHandler INS = new RequestParamHandler();
@@ -73,12 +72,12 @@ public final class RequestParamHandler implements BuildParameter {
 			List<RequestParamTransfer.FieldRequestParam> list = new LinkedList<RequestParamTransfer.FieldRequestParam>();
 			for (Field field : this.annotation.getFields()) {
 				RequestParamTransfer.FieldRequestParam rfp = new RequestParamTransfer.FieldRequestParam();
-				rfp.setDefaultValue(Util.emptyToNull(field.getDefaultValue()));
-				rfp.setValue(Util.emptyToNull(field.getName()));
+				rfp.setDefaultValue(field.getDefaultValue());
+				rfp.setValue(field.getName());
 				if (rfp.getValue() == null)
 					throw new AptException(this.mpe.getRef(), "@FieldParam'value not null or emtry string");
 
-				rfp.setParamName(Util.emptyToNull(field.getParamName()));
+				rfp.setParamName(field.getParamName());
 				if (rfp.getParamName() == null)
 					rfp.setParamName(rfp.getValue());
 
@@ -86,12 +85,12 @@ public final class RequestParamHandler implements BuildParameter {
 				rfp.setValueClassName(field.getClassName());
 				List<TypeName> plist = this.properties.get(rfp.getValue());
 				if (plist == null)
-					throw new AptException(this.mpe.getRef(), "@FieldParam'value not in Bean property");
+					throw new AptException(this.mpe.getRef(),
+							"@FieldParam[value=" + rfp.getValue() + "] not in Bean property");
 				if (plist.size() > 1) {
 					rfp.setTransferClass(TransferFactory.getRequestParamTransfer(rfp.getValueClassName()));
 					if (rfp.getTransferClass() == null)
-						throw new AptException(mpe.getRef(),
-								"@FieldParam'valueClassName not found RequestParamTransfer");
+						throw new AptException(mpe.getRef(), "@FieldParam'valueClass not found RequestParamTransfer");
 					boolean found = false;
 					for (TypeName tn : plist) {
 						if (tn.toString().equals(rfp.getValueClassName())) {
@@ -100,12 +99,15 @@ public final class RequestParamHandler implements BuildParameter {
 						}
 					}
 					if (!found) {
-						throw new AptException(mpe.getRef(), "@FieldParam'valueClassName not found in Bean property");
+						throw new AptException(mpe.getRef(),
+								"@FieldParam[valueClass=" + rfp.getValueClassName() + "] not found in Bean property");
 					}
 				} else {
-					rfp.setTransferClass(TransferFactory.getRequestParamTransfer(list.get(0).toString()));
+					rfp.setTransferClass(TransferFactory.getRequestParamTransfer(plist.get(0).toString()));
 					if (rfp.getTransferClass() == null)
-						throw new AptException(mpe.getRef(), "@FieldParam'value not found RequestParamTransfer");
+						throw new AptException(mpe.getRef(),
+								"@FieldParam[value=" + rfp.getValue() + "] not found RequestParamTransfer");
+
 				}
 				if (this.annotation.getParamName().length() > 0) {
 					rfp.setParamName(this.annotation.getParamName() + "_" + rfp.getParamName());
@@ -120,7 +122,9 @@ public final class RequestParamHandler implements BuildParameter {
 			String[] exincludes = annotation.getExcludeFields();
 			if (exincludes != null && exincludes.length > 0) {
 				for (String s : exincludes) {
-					this.properties.remove(s);
+					if (s != null && s.trim().length() > 0) {
+						this.properties.remove(s.trim());
+					}
 				}
 			}
 			for (Map.Entry<String, List<TypeName>> en : this.properties.entrySet()) {
@@ -135,7 +139,6 @@ public final class RequestParamHandler implements BuildParameter {
 						if (clRpt == null) {
 							clRpt = TransferFactory.getRequestParamTransfer(ttn.toString());
 							valueClassName = ttn.toString();
-							// if(clRpt !=null) validType = ttn;
 						} else {
 							if (null != TransferFactory.getRequestParamTransfer(ttn.toString())) {
 								throw new AptException(mpe.getRef(), "parameter Bean property can set mulit Value");
@@ -152,7 +155,7 @@ public final class RequestParamHandler implements BuildParameter {
 				} else {
 					rfp.setParamName(en.getKey());
 				}
-				rfp.setDefaultValue("");
+				rfp.setDefaultValue(null);
 				rfp.setRequired(false);
 				rfp.setTransferClass(clRpt);
 				rfp.setValueClassName(valueClassName);

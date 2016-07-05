@@ -78,7 +78,8 @@ public class BaseArrayRPT extends AbstractRequestParamTransfer {
 
 	@Override
 	public void bulidBeanProterty() {
-		String vTypeName = this.mpe.getTypeName();
+		String ATypeName = this.frp.getValueClassName();
+		String vTypeName = ATypeName.substring(0,ATypeName.length()-2);
 		String localName = cw.getMethodTempVarName();
 		this.checkRequestFieldParamName();
 		this.aptWebHandler.readParameters(this.frp.getParamName().trim());
@@ -86,19 +87,18 @@ public class BaseArrayRPT extends AbstractRequestParamTransfer {
 			cw.l("if(null==params || params.length==0){");
 			this.raiseNoFoundError(this.frp.getParamName().trim());
 			cw.l("}");
-			cw.bL(vTypeName).w(" ").w(localName).w(" = new ")
-					.w(vTypeName.substring(0, vTypeName.length() - 2)).el("params.length];");
+			cw.bL(vTypeName).w("[] ").w(localName).w(" = new ").w(vTypeName).el("[params.length];");
 			cw.l("for( int i = 0 ; i < params.length ; ++i){")
 			   .w(localName).w("[i]=");
-			this.transferToParams(this.frp.getValueClassName());
+			this.transferToParams(ATypeName);
 			cw.el(";").l("}");
 			cw.writeSetter(this.mpe.getName(), this.frp.getValue(), localName);
 		} else {
 			cw.l("if(null!=params && params.length!=0){");
-			cw.bL(vTypeName).w(" ").w(localName).w(" = new ").w(vTypeName.substring(0, vTypeName.length() - 2)).el("params.length];");
+			cw.bL(vTypeName).w("[] ").w(localName).w(" = new ").w(vTypeName).el("[params.length];");
 			cw.l("for( int i = 0 ; i < params.length ; ++i){")
 			.bL(localName).w("[i]=");
-			this.transferToParams(this.frp.getValueClassName());
+			this.transferToParams(ATypeName);
 			cw.el(";");
 			cw.l("}");
 			cw.writeSetter(this.mpe.getName(), this.frp.getValue(), localName);

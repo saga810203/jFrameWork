@@ -6,7 +6,9 @@ import org.jfw.apt.annotation.Autowrie;
 import org.jfw.apt.annotation.DefaultValue;
 import org.jfw.apt.annotation.Nullable;
 import org.jfw.apt.demo.dao.UserDao;
+import org.jfw.apt.demo.web.pojo.EUser;
 import org.jfw.apt.demo.web.pojo.LoginUser;
+import org.jfw.apt.demo.web.pojo.TestPojo;
 import org.jfw.apt.web.annotation.Path;
 import org.jfw.apt.web.annotation.operate.Get;
 import org.jfw.apt.web.annotation.operate.Post;
@@ -64,7 +66,11 @@ public class LoginService {
 	public String ddd(@PVar String id, @PVar String name){
 		return null;
 	}
-	
+	@Post
+	@Path("/dfss")
+	public void ds(EUser user,TestPojo pojo){
+		
+	}
 	
 	
 }

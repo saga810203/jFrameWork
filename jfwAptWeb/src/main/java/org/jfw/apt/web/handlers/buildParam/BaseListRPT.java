@@ -89,7 +89,7 @@ public class BaseListRPT extends AbstractRequestParamTransfer {
             cw.bL(tn).w(" ").w(localName).w(" = new java.util.ArrayList<").w(en).el(">();");
             
             cw.l("for( int i = 0 ; i < params.length ; ++i){").bL(localName).w(".add(");
-            this.transferToParams(this.frp.getValueClassName());
+            this.transferToParams(tn);
             cw.el(");");
             cw.l("}");
             cw.writeSetter(this.mpe.getName(), this.frp.getValue(), localName);

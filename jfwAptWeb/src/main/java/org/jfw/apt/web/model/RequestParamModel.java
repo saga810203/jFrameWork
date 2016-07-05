@@ -89,6 +89,7 @@ public class RequestParamModel {
 
 	public static RequestParamModel build(RequestParam rp, String methodVariableName, MethodParamEntry mpe) {
 		RequestParamModel result = new RequestParamModel();
+		result.paramName = "";
 		DefaultValue defaultValue = mpe.getRef().getAnnotation(DefaultValue.class);		
 		result.defaultValue = defaultValue==null?null:Util.emptyToNull(defaultValue.value());
 
@@ -98,8 +99,8 @@ public class RequestParamModel {
 		
 		result.variableName = methodVariableName;
 		if (rp != null) {
-			result.paramName = Util.emptyToNull(rp.value());
-
+			String tPn = Util.emptyToNull(rp.value());
+			if(tPn!= null) result.paramName = tPn;
 			TypeName tn = TypeName.OBJECT;
 			try {
 				Class<?> clazz = rp.targetClass();
@@ -113,6 +114,7 @@ public class RequestParamModel {
 
 			if (rp.fields() != null && rp.fields().length > 0) {
 				List<Field> list = new ArrayList<Field>();
+							
 				for (int i = 0; i < rp.fields().length; ++i) {
 					list.add(Field.build(rp.fields()[i]));
 				}

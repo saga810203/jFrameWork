@@ -84,9 +84,7 @@ public class BaseTypeRPT extends AbstractRequestParamTransfer {
 			String dv = this.frp.getDefaultValue();
 			if(dv!=null){
 				cw.l("}else{");
-				cw.bL(this.mpe.getName()).w(".").w(Util.buildSetter(this.frp.getValue())).w("(");;
-				this.transferToParam(this.frp.getValueClassName());
-				cw.el(");");
+				cw.bL(this.mpe.getName()).w(".").w(Util.buildSetter(this.frp.getValue())).w("(").w(dv).el(");");
 			}
 			cw.l("}");
 		}
