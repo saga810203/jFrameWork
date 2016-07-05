@@ -5,9 +5,9 @@ import java.util.ListIterator;
 import javax.lang.model.element.Element;
 
 import org.jfw.apt.Util;
+import org.jfw.apt.annotation.DefaultValue;
 import org.jfw.apt.annotation.Nullable;
 import org.jfw.apt.exception.AptException;
-import org.jfw.apt.orm.annotation.dao.method.DefaultValue;
 import org.jfw.apt.orm.annotation.dao.method.operator.SelectOne;
 import org.jfw.apt.orm.annotation.entry.Table;
 import org.jfw.apt.orm.core.ColumnHandlerFactory;

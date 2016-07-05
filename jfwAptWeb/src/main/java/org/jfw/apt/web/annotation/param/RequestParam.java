@@ -9,9 +9,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.SOURCE)
 public @interface RequestParam {
 	String value() default "";
-	Class<?> clazz() default Object.class;
-	String defaultValue() default "";
+	Class<?> targetClass() default Object.class;
 	FieldParam[] fields() default {};
 	String[] excludeFields() default {};
-//	Class<? extends BuildParameter> buildParamClass() default RequestParamHandler.class;
 }

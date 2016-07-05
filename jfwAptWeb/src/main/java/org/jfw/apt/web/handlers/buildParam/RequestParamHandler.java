@@ -30,13 +30,7 @@ public final class RequestParamHandler implements BuildParameter {
 			return;
 		}
 
-		RequestParamModel rpm;
-		if (this.requestParam == null) {
-			rpm = new RequestParamModel();
-		} else {
-			rpm = RequestParamModel.build(this.requestParam, mpe.getName(), mpe);
-		}
-
+		RequestParamModel rpm = RequestParamModel.build(this.requestParam, mpe.getName(), mpe);
 		RequestParamTransfer rpt = null;
 		Class<RequestParamTransfer> cls = null;
 		try {
@@ -173,7 +167,6 @@ public final class RequestParamHandler implements BuildParameter {
 			if (fields.length > 0) {
 				list = this.getFieldRequstParamWithDeclared();
 			} else {
-
 				list = this.getFieldRequstParamWithDefault();
 			}
 			this.frp = list.toArray(new RequestParamTransfer.FieldRequestParam[list.size()]);

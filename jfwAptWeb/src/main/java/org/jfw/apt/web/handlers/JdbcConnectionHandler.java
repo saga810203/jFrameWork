@@ -59,7 +59,7 @@ public class JdbcConnectionHandler extends RequestHandler implements CodePartGen
 				.bL("throw ").w(tmp).el(";");
 			}
 			String tmp2 =cw.getMethodTempVarName();
-			cw.bL("}finally{")
+			cw.l("}finally{")
 			.bL("try{").w(_pn).w(".close();}catch(Throwable ").w(tmp2).el("){} ").l("}");
 		}
 	}

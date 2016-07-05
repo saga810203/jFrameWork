@@ -3,10 +3,10 @@ package org.jfw.apt.orm.daoHandler;
 import javax.lang.model.element.Element;
 
 import org.jfw.apt.Util;
+import org.jfw.apt.annotation.DefaultValue;
+import org.jfw.apt.annotation.Nullable;
 import org.jfw.apt.exception.AptException;
 import org.jfw.apt.orm.annotation.dao.Column;
-import org.jfw.apt.annotation.Nullable;
-import org.jfw.apt.orm.annotation.dao.method.DefaultValue;
 import org.jfw.apt.orm.annotation.dao.method.From;
 import org.jfw.apt.orm.annotation.dao.method.operator.QueryVal;
 import org.jfw.apt.orm.core.ColumnHandler;

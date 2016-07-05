@@ -61,7 +61,7 @@ public class PVarHandler implements BuildParameter {
 		cw.el(";");
 		
 		String lTypeName = mpe.getTypeName();
-		cw.bL("if(").w(tmpVar).el("length()>0){");		
+		cw.bL("if(").w(tmpVar).el(".length()>0){");		
 		cw.bL(mpe.getName()).w("=");		
 		if (lTypeName.equals(int.class.getName())) {
 			cw.w("Integer.parseInt(").w(tmpVar).el(");");

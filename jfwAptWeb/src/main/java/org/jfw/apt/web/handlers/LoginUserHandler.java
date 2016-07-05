@@ -37,7 +37,7 @@ public class LoginUserHandler extends RequestHandler {
 			userName = cw.getMethodTempVarName();
 		this.aptWebHandler.readSession();
 		cw.bL(pt).w(" ").w(userName).w(" = (").w(pt)
-				.el(")session.getAttribute(org.jforg.jfw.util.auth.AuthUser.LOGIN_USER_FLAG_IN_SESSION);");
+				.el(")session.getAttribute(org.jfw.util.auth.AuthUser.LOGIN_USER_FLAG_IN_SESSION);");
 		if (user.value() || (user.auth() > 0)) {
 			cw.bL("if(null == ").w(userName)
 					.el(") throw new org.jfw.util.exception.JfwBaseException(1,\"no user login\");");

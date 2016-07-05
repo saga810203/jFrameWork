@@ -1,5 +1,6 @@
 package org.jfw.apt.web.model;
 
+import org.jfw.apt.Util;
 import org.jfw.apt.web.annotation.param.FieldParam;
 
 public class Field{
@@ -30,8 +31,8 @@ public class Field{
 		result.name = fp.value();
 		result.className = fp.valueClassName();
 		result.paramName = fp.paramName();
-		result.defaultValue = fp.defaultValue();
-		result.required = fp.required();			
+		result.defaultValue = Util.emptyToNull(fp.defaultValue());
+		result.required = null == result.defaultValue;			
 		return result;
 	}
 

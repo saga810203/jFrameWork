@@ -21,11 +21,11 @@ public class ExecuteHandler extends RequestHandler {
 
 	
 		if(!"void".equals(this.aptWebHandler.getReturnType())){
-			cw.bL(this.aptWebHandler.getReturnType()).w(" handler.");
+			cw.bL(" result = ");
 		}else{
-			cw.bL("handler.");
+			cw.bL("");
 		}
-		cw.w(this.aptWebHandler.getMe().getName()).w("(");
+		cw.w("handler.").w(this.aptWebHandler.getMe().getName()).w("(");
 		boolean first = true;
 		for(ListIterator<MethodParamEntry> it = mpes.listIterator(); it.hasNext();){
 			MethodParamEntry mpe = it.next();

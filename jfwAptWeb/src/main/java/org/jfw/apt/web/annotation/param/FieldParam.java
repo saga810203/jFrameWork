@@ -11,6 +11,5 @@ public @interface FieldParam {
 	String value();
 	String valueClassName() default "";
 	String paramName() default "";
-	String defaultValue() default "null";
-	boolean required() default true;
+	String defaultValue() default "";
 }

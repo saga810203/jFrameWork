@@ -5,12 +5,12 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 
+import org.jfw.apt.annotation.DefaultValue;
 import org.jfw.apt.annotation.Nullable;
 import org.jfw.apt.demo.po.User;
 import org.jfw.apt.orm.annotation.dao.Column;
 import org.jfw.apt.orm.annotation.dao.DAO;
 import org.jfw.apt.orm.annotation.dao.Dynamic;
-import org.jfw.apt.orm.annotation.dao.method.DefaultValue;
 import org.jfw.apt.orm.annotation.dao.method.From;
 import org.jfw.apt.orm.annotation.dao.method.OrderBy;
 import org.jfw.apt.orm.annotation.dao.method.operator.Delete;

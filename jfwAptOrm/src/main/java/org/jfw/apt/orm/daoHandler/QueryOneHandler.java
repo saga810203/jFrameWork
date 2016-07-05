@@ -5,8 +5,8 @@ import java.util.ListIterator;
 import javax.lang.model.element.Element;
 
 import org.jfw.apt.Util;
+import org.jfw.apt.annotation.DefaultValue;
 import org.jfw.apt.annotation.Nullable;
-import org.jfw.apt.orm.annotation.dao.method.DefaultValue;
 import org.jfw.apt.orm.annotation.dao.method.operator.QueryOne;
 import org.jfw.apt.orm.core.ColumnHandlerFactory;
 import org.jfw.apt.orm.core.model.CalcColumn;

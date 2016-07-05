@@ -25,7 +25,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
@@ -97,15 +96,9 @@ public final class ClassName extends TypeName {
 						continue;
 					if (name.length() < 4)
 						continue;
-					if (!name.startsWith("set"))
+					name = Util.buildFieldName(name, false, false);
+					if(null == name) 
 						continue;
-					name = name.substring(3);
-					if (name.length() == 1) {
-						name = name.toLowerCase(Locale.US);
-					} else {
-						name = name.substring(0, 1).toLowerCase(Locale.US) + name.substring(1);
-					}
-
 					TypeName tn;
 					try {
 						tn = TypeName.get(method.getGenericReturnType());
@@ -136,18 +129,8 @@ public final class ClassName extends TypeName {
 						continue;
 					if (!ele.getModifiers().contains(Modifier.PUBLIC))
 						continue;
-					String name = ee.getSimpleName().toString();
-					if (name.length() < 4)
-						continue;
-					if (!name.startsWith("set"))
-						continue;
-					name = name.substring(3);
-					if (name.length() == 1) {
-						name = name.toLowerCase(Locale.US);
-					} else {
-						name = name.substring(0, 1).toLowerCase(Locale.US) + name.substring(1);
-					}
-
+					String name =Util.buildFieldName(ee.getSimpleName().toString(),false,false);
+					if(null == name ) continue;
 					TypeName tn;
 					try {
 						tn = TypeName.get(ee.getReturnType());

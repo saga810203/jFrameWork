@@ -25,6 +25,7 @@ import org.jfw.apt.web.annotation.operate.Put;
 import org.jfw.apt.web.handlers.BuildParamHandler;
 import org.jfw.apt.web.handlers.ChangeResultHandler;
 import org.jfw.apt.web.handlers.ExecuteHandler;
+import org.jfw.apt.web.handlers.JdbcConnectionHandler;
 import org.jfw.apt.web.handlers.LastScriptHandler;
 import org.jfw.apt.web.handlers.LoginUserHandler;
 import org.jfw.apt.web.handlers.ResultToNullHandler;
@@ -101,7 +102,7 @@ public class AptWebHandler extends CodeGenHandler {
 
 	@Override
 	public void genAnnotations() {
-		this.annotationDescps = new String[] { "org.jfw.apt.annotation.Bean()" };
+		this.annotationDescps = new String[] { "@org.jfw.apt.annotation.Bean" };
 
 	}
 
@@ -151,7 +152,6 @@ public class AptWebHandler extends CodeGenHandler {
 	}
 
 	public void writeMethodContent() throws AptException {
-		this.codes.clear();
 		out.l("req.setCharacterEncoding(\"UTF-8\");").l("res.setCharacterEncoding(\"UTF-8\");");
 		if (!this.returnType.equals("void")) {
 			out.bL(this.returnType).w(" result").el(Util.isPrimitive(this.returnType) ? ";" : " = null ;");
@@ -258,7 +258,7 @@ public class AptWebHandler extends CodeGenHandler {
 	public void readURI() {
 		if (!readedURI) {
 			readedURI = true;
-			out.el("String[] _uriArray = (String[]) req.getAttribute(\"JFW_REQUEST_URL_ARRAY\");");
+			out.l("String[] _uriArray = (String[]) req.getAttribute(\"JFW_REQUEST_URL_ARRAY\");");
 		}
 	}
 
@@ -343,6 +343,7 @@ public class AptWebHandler extends CodeGenHandler {
 		supportedClass.add(LoginUserHandler.class);
 		supportedClass.add(BuildParamHandler.class);
 		supportedClass.add(ValidateParamHandler.class);
+		supportedClass.add(JdbcConnectionHandler.class);
 		supportedClass.add(ExecuteHandler.class);
 		supportedClass.add(SetSessionHandler.class);
 		supportedClass.add(ChangeResultHandler.class);
