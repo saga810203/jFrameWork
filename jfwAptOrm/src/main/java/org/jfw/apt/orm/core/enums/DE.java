@@ -31,6 +31,12 @@ public enum DE {
 	string_de(StringHandler.class, "VARCHAR2(255)",false,true,true,true,null,null),
 	String_de(StringHandler.class, "VARCHAR2(255)",true,true,true,true,null,null),
 	
+	dictCode(StringHandler.class, "VARCHAR(32)",false,true,true,true,null,null),
+	DictCode(StringHandler.class, "VARCHAR(32)",true,true,true,true,null,null),
+	
+	dictCaption(StringHandler.class, "VARCHAR(255)",false,true,true,true,null,null),
+
+	
 	id_10(FixLenStringHandler.class,"CHAR(10)",false,true,false,true,null,null),
 	id_32(FixLenStringHandler.class,"CHAR(10)",false,true,false,true,null,null),
 	
@@ -51,6 +57,9 @@ public enum DE {
 
 	blob(BlobHandler.class, "BLOB", false,true,true,true,null,null), 
 	Blob(BlobHandler.class, "BLOB", true,true,true,true,null,null), 
+	
+	bytea(BlobHandler.class, "BYTEA", false,true,true,true,null,null), 
+	Bytea(BlobHandler.class, "BYTEA", true,true,true,true,null,null), 
 
 	streamBlob(StreamBlobHandler.class, "BLOB",false,true,true,false,null,null),
 	StreamBlob(StreamBlobHandler.class, "BLOB",false,true,true,false,null,null),
@@ -63,6 +72,12 @@ public enum DE {
 	
 	mobilePhone_de(FixLenStringHandler.class,"CHAR(11)",false,true,true,true,null,null),
 	MobilePhone_de(FixLenStringHandler.class,"CHAR(11)",true,true,true,true,null,null),
+	
+	singleChar(FixLenStringHandler.class,"CHAR(1)",false,true,true,true,null,null),
+	SingleChar(FixLenStringHandler.class,"CHAR(1)",true,true,true,true,null,null),
+	
+	doubleChar(FixLenStringHandler.class,"CHAR(2)",false,true,true,true,null,null),
+	DoubleChar(FixLenStringHandler.class,"CHAR(2)",true,true,true,true,null,null),
 	
 	md5_de(FixLenStringHandler.class,"CHAR(32)",false,true,true,true,null,null),
 	Md5_de(FixLenStringHandler.class,"CHAR(32)",true,true,true,true,null,null)	

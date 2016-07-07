@@ -1,5 +1,7 @@
 package org.jfw.apt.orm.daoHandler;
 
+import java.lang.annotation.Annotation;
+
 import javax.lang.model.element.Element;
 
 import org.jfw.apt.AptConfig;
@@ -18,7 +20,7 @@ public class OraclePageQueryHandler extends BasePageQueryHandler {
 		if(pq == null) return false;
 		String dv =Util.emptyToNull(pq.value());
 		if(dv == null){
-			if(AptConfig.get("DB_PAGE:Oracle")!= null) return true;
+			if(AptConfig.get("DB:Oracle")!= null) return true;
 			return false;
 		}else{
 			if(dv.equals("Oracle")) return true;
@@ -106,6 +108,11 @@ public class OraclePageQueryHandler extends BasePageQueryHandler {
 
 	@Override
 	protected void doAfterWhereForNotFirstPage() {
+	}
+
+	@Override
+	protected Class<? extends Annotation> getAnnotationClass() {
+		return PageQuery.class;
 	}
 
 }

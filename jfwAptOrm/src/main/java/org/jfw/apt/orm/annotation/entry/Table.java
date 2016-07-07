@@ -25,4 +25,8 @@ public @interface Table {
 	 * @return
 	 */
 	String value() default "";
+	/**
+	 * create in database;
+	 */
+	boolean create() default true;
 }

@@ -1,11 +1,11 @@
 package org.jfw.apt.orm.daoHandler;
 
+import java.lang.annotation.Annotation;
 import java.util.Arrays;
 import java.util.ListIterator;
 
 import org.jfw.apt.exception.AptException;
 import org.jfw.apt.model.MethodParamEntry;
-import org.jfw.apt.orm.annotation.dao.method.operator.PageQuery;
 import org.jfw.apt.orm.core.ColumnHandlerFactory;
 import org.jfw.apt.orm.core.model.CalcColumn;
 import org.jfw.apt.orm.core.model.where.WhereColumn;
@@ -22,6 +22,7 @@ public abstract class BasePageQueryHandler extends BaseQueryHandler {
 	protected String whereSqlName;
 
 
+	protected abstract Class<? extends Annotation> getAnnotationClass();
 
 	@Override
 	protected String getDefReturnClassName() throws AptException {
@@ -44,15 +45,15 @@ public abstract class BasePageQueryHandler extends BaseQueryHandler {
 		}
 		if (null == this.pageNoName)
 			throw new AptException(ref,
-					"Method[@" + PageQuery.class.getName() + "] must has param (int pageNo) or (int _pageNo)");
+					"Method[@" + this.getAnnotationClass().getName() + "] must has param (int pageNo) or (int _pageNo)");
 		if (null == this.pageSizeName)
 			throw new AptException(ref,
-					"Method[@" + PageQuery.class.getName() + "] must has param (int pageSize) or (int _pageSize)");
+					"Method[@" + this.getAnnotationClass().getName() + "] must has param (int pageSize) or (int _pageSize)");
 
 		String rcn = this.me.getReturnType();
 		if ((rcn.length() <= PAGE_MIN_INDEX) || (!rcn.startsWith(PAGE_PREFIX)) || (!rcn.endsWith(PAGE_SUFFIX)))
 			throw new AptException(ref,
-					"Method[@" + PageQuery.class.getName() + "] must return org.jfw.util.PageQueryResult<?>");
+					"Method[@" + this.getAnnotationClass().getName() + "] must return org.jfw.util.PageQueryResult<?>");
 		return rcn.substring(PAGE_RCN_INDEX, rcn.length() - 1);
 
 	}
@@ -133,7 +134,7 @@ public abstract class BasePageQueryHandler extends BaseQueryHandler {
 		cw.bL("if(0== ").w(this.totalName).el("){").l("_result.setPageNo(1);")
 				.bL("_result.setData(java.util.Collections.<").w(this.returnClassName).el(">emptyList());")
 				.l("return _result;").l("}");
-
+		cw.resetJdbcParamIndex();
 		this.isFirstPageName = cw.getMethodTempVarName();
 		cw.bL("boolean ").w(this.isFirstPageName).w(" = (1 == ").w(this.pageNoName).el(");");
 		cw.bL("if(").w(this.isFirstPageName).el("){");
@@ -193,9 +194,8 @@ public abstract class BasePageQueryHandler extends BaseQueryHandler {
 		this.doBeforFromForFirstPage();
 
 		cw.w(" FROM ").ws(this.fromSentence);
-
-		cw.el("\");");
 		if (this.dynamic) {
+			cw.el("\");");
 			if (this.wherePart.hasStaticPart()) {
 				cw.bL("sql.append(").w(this.whereSqlName).el(");");
 			} else {
@@ -206,7 +206,7 @@ public abstract class BasePageQueryHandler extends BaseQueryHandler {
 			if (null != this.orderBy)
 				cw.bL("sql.append(\" ").ws(this.orderBy).el("\");");
 		} else {
-
+			cw.el("\";");
 			if (null != this.wherePart) {
 				cw.bL("sql = sql + ").w(this.whereSqlName).el(";");
 			}
@@ -245,8 +245,8 @@ public abstract class BasePageQueryHandler extends BaseQueryHandler {
 		this.doBeforFromForNotFirstPage();
 
 		cw.w(" FROM ").ws(this.fromSentence);
-		cw.el("\");");
 		if (this.dynamic) {
+			cw.el("\");");
 			if(this.wherePart.hasStaticPart()){
 				cw.bL("sql.append(").w(this.whereSqlName).el(");");
 			}else{
@@ -256,7 +256,7 @@ public abstract class BasePageQueryHandler extends BaseQueryHandler {
 			if (null != this.orderBy)
 				cw.bL("sql.append(\" ").ws(this.orderBy).el("\");");
 		} else {
-
+			cw.el("\";");
 			if (null != this.wherePart) {
 				cw.bL("sql = sql + ").w(this.whereSqlName).el(";");
 			}

@@ -17,7 +17,7 @@ public class OraclePageSelectHandler extends BasePageSelectHandler {
 		if(pq == null) return false;
 		String dv =Util.emptyToNull(pq.value());
 		if(dv == null){
-			if(AptConfig.get("DB_PAGE:Oracle")!= null) return true;
+			if(AptConfig.get("DB:Oracle")!= null) return true;
 			return false;
 		}else{
 			if(dv.equals("Oracle")) return true;

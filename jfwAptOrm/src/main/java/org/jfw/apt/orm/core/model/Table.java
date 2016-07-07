@@ -5,11 +5,22 @@ import java.util.List;
 
 public class Table extends View{
 	
+	private boolean create;
+	
 	private boolean extendTable ;
 	
 	private DbUniqu primaryKey;
 	
 	private List<DbUniqu> uniqus = new ArrayList<DbUniqu>();
+
+	
+	public boolean isCreate() {
+		return create;
+	}
+
+	public void setCreate(boolean create) {
+		this.create = create;
+	}
 
 	public DbUniqu getPrimaryKey() {
 		return primaryKey;

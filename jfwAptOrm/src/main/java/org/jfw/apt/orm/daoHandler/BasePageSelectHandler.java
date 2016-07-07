@@ -1,5 +1,6 @@
 package org.jfw.apt.orm.daoHandler;
 
+import java.lang.annotation.Annotation;
 import java.util.Arrays;
 import java.util.ListIterator;
 
@@ -76,5 +77,11 @@ public abstract class BasePageSelectHandler extends BasePageQueryHandler {
 				it.remove();
 		}
 	}
+
+	@Override
+	protected Class<? extends Annotation> getAnnotationClass() {
+		return PageSelect.class;
+	}
+	
 	
 }

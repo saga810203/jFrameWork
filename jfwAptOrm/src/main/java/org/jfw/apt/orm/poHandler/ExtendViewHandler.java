@@ -33,6 +33,6 @@ public class ExtendViewHandler extends BaseHandler{
 		
 		public static void check(ExtendView table) throws AptException{
 			DataEntry p = DataEntryFactory.get(table.getSupportedDataEntrys().get(0),DataEntry.TABLE);
-			if(p== null) throw new AptException(table.getRef(),"supper class["+table.getSupportedDataEntrys().get(0)+"] not with "+ANNO_NAME);	
+			if(p== null) throw new AptException(table.getRef(),"supper class["+table.getSupportedDataEntrys().get(0)+"] not with @"+Table.class.getName());	
 		}
 }

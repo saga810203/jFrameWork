@@ -18,6 +18,7 @@ import org.jfw.apt.exception.AptException;
 import org.jfw.apt.model.ClassName;
 import org.jfw.apt.model.MethodEntry;
 import org.jfw.apt.model.TypeName;
+import org.jfw.apt.orm.annotation.dao.Column;
 import org.jfw.apt.orm.core.ColumnHandlerFactory;
 import org.jfw.apt.orm.core.enums.DE;
 import org.jfw.apt.orm.core.model.ColumnFactory;
@@ -146,10 +147,24 @@ public abstract class BaseHandler {
 
 				this.entry.getColumns().add(mc);
 			} else {
+				
+				String fi =Util.emptyToNull(col.fixSqlValueWithInsert());
+				if(fi==null){
+					fi =Util.emptyToNull(de.getFixSqlValueWithInsert());
+				}
+				String fu = Util.emptyToNull(col.fixSqlValueWithUpdate());
+				if(fu==null){
+					fu =Util.emptyToNull(de.getFixSqlValueWithUpdate());
+				}
+				String dt = Util.emptyToNull(col.dbType());
+				if(dt == null){
+					dt = Util.emptyToNull(de.getDbType());
+				}
+				if(dt == null) throw new AptException(ele,"invalid @"+Column.class.getName()+"'dbType");
 
 				org.jfw.apt.orm.core.model.CalcColumn mc = ColumnFactory.buildColumn(de.getHandlerClass(),
 						de.isNullable(), javaType, genDbName(javaName, col.name()), javaName, de.isQueryable(),
-						de.getDbType(),Util.emptyToNull(de.getFixSqlValueWithInsert()), Util.emptyToNull(de.getFixSqlValueWithUpdate()), de.isInsertable(),
+						dt,fi, fu, de.isInsertable(),
 						de.isRenewable());
 				this.check(mc);
 

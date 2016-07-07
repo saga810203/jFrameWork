@@ -30,9 +30,8 @@ public class QueryListHandler extends BaseQueryHandler {
 	protected void buildResult() {
 		cw.bL(LIST_PREFIX).w(this.returnClassName).w(LIST_SUFFIX).w(" _result = new java.util.ArrayList<")
 				.w(this.returnClassName).el(">();");
-		cw.l("while(rs.next(){");
+		cw.l("while(rs.next()){");
 		cw.bL(this.returnClassName).w(" _obj =  new ").w(this.returnClassName).el("();");
-		cw.bL("_result = new ").w(this.returnClassName).el("();");
 		int i=1;
 		for(ListIterator<CalcColumn> it = this.fields.listIterator(); it.hasNext();){
 			CalcColumn col = it.next();

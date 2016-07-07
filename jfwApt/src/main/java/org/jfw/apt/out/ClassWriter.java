@@ -12,6 +12,9 @@ import org.jfw.apt.Util;
 import org.jfw.apt.exception.AptException;
 
 public class ClassWriter {
+	public static final String JDBC_PARAM_INDEX =ClassWriter.class.getName()+"_JDBC_PARAM_INDEX";
+	
+	
 	protected JfwProccess jfwProccess;
 	private StringBuilder sb;
 
@@ -267,6 +270,24 @@ public class ClassWriter {
 			throw new AptException(jfwProccess.getCurrentElement(),
 					"write java sorce file(" + this.classname + ") error:" + e.getMessage());
 		}
+	}
+	
+	public void checkJdbcParamIndex() {
+		String pis = (String) (this.getMethodScope().get(JDBC_PARAM_INDEX));
+		if (pis == null) {
+			pis = this.getMethodTempVarName();
+			this.methodScope.put(JDBC_PARAM_INDEX, pis);
+			this.bL("int ").w(pis).el(" = 1;");
+		}
+	}
+	public void resetJdbcParamIndex() {
+		String pis = (String) (this.methodScope.get(JDBC_PARAM_INDEX));
+		if (pis != null) {
+			this.bL(pis).el(" = 1;");
+		}
+	}
+	public String getJdbcParamIndexName(){
+		return (String) (this.getMethodScope().get(JDBC_PARAM_INDEX));
 	}
 
 }

@@ -18,7 +18,7 @@ public class PostgreSQLPageSelectHandler extends BasePageSelectHandler {
 		if(pq == null) return false;
 		String dv =Util.emptyToNull(pq.value());
 		if(dv == null){
-			if(AptConfig.get("DB_PAGE:PostgreSQL")!= null) return true;
+			if(AptConfig.get("DB:PostgreSQL")!= null) return true;
 			return false;
 		}else{
 			if(dv.equals("PostgreSQL")) return true;

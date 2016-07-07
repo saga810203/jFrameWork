@@ -1,5 +1,9 @@
 package org.jfw.util.bean.define;
 
+import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
+
 import org.jfw.util.bean.BeanFactory;
 
 public class FixedValueDefine extends ValueDefine{
@@ -33,7 +37,15 @@ public class FixedValueDefine extends ValueDefine{
 			this.value = new  java.math.BigInteger(val.trim());
 		} else if(this.clazz.equals(java.math.BigDecimal.class)){
 			this.value = new java.math.BigDecimal(val.trim());
-		} else if(this.clazz.equals(Class.class)){
+		} else if(this.clazz.equals(File.class)){
+			this.value = new File(val.trim());
+		}else if( this.clazz.equals(URL.class)){
+			try {
+				this.value = new URL(val.trim());
+			} catch (MalformedURLException e) {
+				this.value = null;
+			}
+		}else if(this.clazz.equals(Class.class)){
 			try {
 				this.value = Class.forName(val.trim());
 			} catch (ClassNotFoundException e) {

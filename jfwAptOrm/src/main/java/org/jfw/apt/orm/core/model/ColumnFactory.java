@@ -15,6 +15,7 @@ public final class ColumnFactory {
 	}
 
 	private static boolean match(String s1, String s2) {
+		if(s1==s2) return true;
 		if ((null == s1) && (null != s2))
 			return false;
 		if ((null != s1) && (null == s2))

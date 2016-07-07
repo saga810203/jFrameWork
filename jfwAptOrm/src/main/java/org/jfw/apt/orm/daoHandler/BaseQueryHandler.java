@@ -26,6 +26,9 @@ public abstract class BaseQueryHandler extends BaseDaoHandler {
 
 	public static final String SECOND_PAGE_SIZE_NAME = "pageSize";
 	public static final String SECOND_PAGE_NO_NAME = "pageNo";
+	
+	public static final String FIRST_LIMIT_NAME="_rows";
+	public static final String SECOND_LIMIT_NAME ="rows";
 
 	protected boolean dynamic = false;
 

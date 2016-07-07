@@ -20,8 +20,12 @@ import org.jfw.apt.orm.daoHandler.DeleteWithBatchHandler;
 import org.jfw.apt.orm.daoHandler.DeleteWithHandler;
 import org.jfw.apt.orm.daoHandler.InsertBatchHandler;
 import org.jfw.apt.orm.daoHandler.InsertHandler;
+import org.jfw.apt.orm.daoHandler.OracleLimitQueryHandler;
+import org.jfw.apt.orm.daoHandler.OracleLimitSelectHandler;
 import org.jfw.apt.orm.daoHandler.OraclePageQueryHandler;
 import org.jfw.apt.orm.daoHandler.OraclePageSelectHandler;
+import org.jfw.apt.orm.daoHandler.PostgreSQLLimitQueryHandler;
+import org.jfw.apt.orm.daoHandler.PostgreSQLLimitSelectHandler;
 import org.jfw.apt.orm.daoHandler.PostgreSQLPageQueryHandler;
 import org.jfw.apt.orm.daoHandler.PostgreSQLPageSelectHandler;
 import org.jfw.apt.orm.daoHandler.QueryListHandler;
@@ -153,6 +157,12 @@ public class DataAccessObjectHandler extends CodeGenHandler {
 		supportedClass.add(DeleteBatchHandler.class);
 		supportedClass.add(UpdateWithBatchHandler.class);
 		supportedClass.add(DeleteWithBatchHandler.class);
+		
+		supportedClass.add(PostgreSQLLimitQueryHandler.class);
+		supportedClass.add(PostgreSQLLimitSelectHandler.class);
+		supportedClass.add(OracleLimitQueryHandler.class);
+		supportedClass.add(OracleLimitSelectHandler.class);
+		
 
 	}
 

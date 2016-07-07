@@ -43,7 +43,7 @@ public class LoginUser implements AuthUser {
 		return this.id;
 	}
 
-	@Override
+
 	public String getOrgCode() {
 		return this.orgCode;
 	}

@@ -52,7 +52,7 @@ public class TableHandler extends BaseHandler {
 		this.handleColumn();
 
 		org.jfw.apt.orm.annotation.entry.Table t = this.ref.getAnnotation(org.jfw.apt.orm.annotation.entry.Table.class);
-
+		table.setCreate(t.create());
 		table.setFromSentence(genDbName(this.entry.getJavaName(), Util.emptyToNull(t.value())));
 
 	}
@@ -84,22 +84,21 @@ public class TableHandler extends BaseHandler {
 	}
 
 	public static void check(Table table) throws AptException {
-		if (table.isExtendTable()) {
-			String etName = table.getSupportedDataEntrys().get(0);
-			Table et = (Table) DataEntryFactory.get(etName, DataEntry.TABLE);
-			if (et == null)
-				throw new AptException(table.getRef(), "supper class[" + etName + "] not with " + ANNO_NAME);
-		}
-
-		List<String> ins = new ArrayList<String>(table.getSupportedDataEntrys());
-		if (table.isExtendTable())
-			ins.remove(0);
-
-		for (ListIterator<String> it = ins.listIterator(); it.hasNext();) {
+		boolean first = true;
+		for (ListIterator<String> it = table.getSupportedDataEntrys().listIterator(); it.hasNext();) {
 			String dn = it.next();
+			if(first){
+				first = false;
+				if(table.isExtendTable()){
+					Table et = (Table) DataEntryFactory.get(dn, DataEntry.TABLE);
+					if (et == null){
+						throw new AptException(table.getRef(), "supper class[" + dn + "] not with " + ANNO_NAME);
+					}
+					continue;
+				}
+			}
 			DataEntry p = DataEntryFactory.get(dn, DataEntry.VIRTUAL_TABLE);
-			if (p == null)
-				throw new AptException(table.getRef(), "impl interface[" + dn + "] not with " + ANNO_NAME);
+			if (p == null) it.remove();
 		}
 	}
 }

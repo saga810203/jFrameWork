@@ -1,5 +1,7 @@
 package org.jfw.apt.orm.daoHandler;
 
+import java.lang.annotation.Annotation;
+
 import javax.lang.model.element.Element;
 
 import org.jfw.apt.AptConfig;
@@ -10,20 +12,23 @@ public class PostgreSQLPageQueryHandler extends BasePageQueryHandler {
 
 	protected String lastPage;
 	protected String beginIndex;
-	
+
 	public boolean match(Element ele) {
 		PageQuery pq = ele.getAnnotation(PageQuery.class);
-		if(pq == null) return false;
-		String dv =Util.emptyToNull(pq.value());
-		if(dv == null){
-			if(AptConfig.get("DB_PAGE:PostgreSQL")!= null) return true;
+		if (pq == null)
 			return false;
-		}else{
-			if(dv.equals("PostgreSQL")) return true;
+		String dv = Util.emptyToNull(pq.value());
+		if (dv == null) {
+			if (AptConfig.get("DB:PostgreSQL") != null)
+				return true;
+			return false;
+		} else {
+			if (dv.equals("PostgreSQL"))
+				return true;
 			return false;
 		}
 	}
-		
+
 	@Override
 	protected String getSelectFieldWithRecordCount() {
 		return "COUNT(1)";
@@ -39,9 +44,9 @@ public class PostgreSQLPageQueryHandler extends BasePageQueryHandler {
 
 	@Override
 	protected void doAfterOrderByForFirstPage() {
-		if(dynamic){
+		if (dynamic) {
 			cw.bL("sql.append(\" LIMIT \").append(").w(this.pageSizeName).el(");");
-		}else{
+		} else {
 			cw.bL("sql = sql + \" LIMIT \" + ").w(this.pageSizeName).el(";");
 		}
 	}
@@ -56,47 +61,48 @@ public class PostgreSQLPageQueryHandler extends BasePageQueryHandler {
 
 	@Override
 	protected void doAfterOrderByForNotFirstPage() {
-	
-		if(dynamic){
-			cw.bL("sql.append(\" LIMIT \").append(").w(this.pageSizeName).w(").append(\" OFFSET \").append(").w(this.beginIndex)
-			.el(");");
-		}else{
+
+		if (dynamic) {
+			cw.bL("sql.append(\" LIMIT \").append(").w(this.pageSizeName).w(").append(\" OFFSET \").append(")
+					.w(this.beginIndex).el(");");
+		} else {
 			cw.bL("sql = sql + \" LIMIT \" + ").w(this.pageSizeName).w("+ \" OFFSET \"+").w(this.beginIndex).el(";");
 		}
 	}
 
 	@Override
 	protected void initForNotFirstPage() {
-		
+
 		this.lastPage = cw.getMethodTempVarName();
 		this.beginIndex = cw.getMethodTempVarName();
 		cw.bL("int ").w(lastPage).w(" = ").w(this.totalName).w(" / ").w(this.pageSizeName).el(";");
-		cw.bL("if(").w(this.totalName).w(" % ").w(this.pageSizeName).el(" != 0){")
-		.bL("++").w(this.lastPage).el(";")
-		.l("}")
-		.bL("if(").w(this.pageNoName).w(" > ").w(this.lastPage).el("){")
-		.bL(this.pageNoName).w(" = ").w(this.lastPage).el(";")
-		.l("}")
-		.bL("_result.setPageNo(").w(this.pageNoName).el(");")
-		.bL("--").w(this.pageNoName).el(";");
-		
+		cw.bL("if(").w(this.totalName).w(" % ").w(this.pageSizeName).el(" != 0){").bL("++").w(this.lastPage).el(";")
+				.l("}").bL("if(").w(this.pageNoName).w(" > ").w(this.lastPage).el("){").bL(this.pageNoName).w(" = ")
+				.w(this.lastPage).el(";").l("}").bL("_result.setPageNo(").w(this.pageNoName).el(");").bL("--")
+				.w(this.pageNoName).el(";");
+
 		cw.bL("int ").w(this.beginIndex).w(" = (").w(this.pageNoName).w(" * ").w(this.pageSizeName).el(");");
 
 	}
 
 	@Override
 	protected void readRecordCount() {
-		cw.bL(this.totalName).el(" = _pageRs.getInt(1);");		
+		cw.bL(this.totalName).el(" = _pageRs.getInt(1);");
 	}
 
 	@Override
 	protected void doAfterWhereForFirstPage() {
-		
+
 	}
 
 	@Override
 	protected void doAfterWhereForNotFirstPage() {
-		
+
+	}
+
+	@Override
+	protected Class<? extends Annotation> getAnnotationClass() {
+		return PageQuery.class;
 	}
 
 }

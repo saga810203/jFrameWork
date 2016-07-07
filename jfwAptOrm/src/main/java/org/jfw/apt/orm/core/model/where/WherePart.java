@@ -64,7 +64,7 @@ public class WherePart {
 			if (first) {
 				first = false;
 			} else {
-				cw.w(and ? " AND " : " OR");
+				cw.w(and ? " AND " : " OR ");
 			}
 			cw.ws(it.next().getWhereSql());
 		}

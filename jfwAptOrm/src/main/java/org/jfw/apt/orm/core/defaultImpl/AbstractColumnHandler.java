@@ -7,7 +7,6 @@ import org.jfw.apt.out.ClassWriter;
 
 public abstract class AbstractColumnHandler implements ColumnHandler {
 
-	public static final String PARAM_INDEX = AbstractColumnHandler.class.getName() + "_PARAM_INDEX";
 
 	public abstract String getReadMethod();
 
@@ -35,16 +34,12 @@ public abstract class AbstractColumnHandler implements ColumnHandler {
 	}
 
 	public void checkParamIndex(ClassWriter cw) {
-		String pis = (String) (cw.getMethodScope().get(PARAM_INDEX));
-		if (pis == null) {
-			pis = cw.getMethodTempVarName();
-			cw.getMethodScope().put(PARAM_INDEX, pis);
-			cw.bL("int ").w(pis).el(" = 1;");
-		}
+		cw.checkJdbcParamIndex();
 	}
 
+	
 	public String getParamIndexName(ClassWriter cw) {
-		return (String) (cw.getMethodScope().get(PARAM_INDEX));
+		return cw.getJdbcParamIndexName();
 	}
 
 	public static String genKeyForCheckNullOrCache(String varName) {

@@ -72,9 +72,16 @@ public class JfwBaseException extends Exception {
 	static{
 		reasons.put(0,"UnDefine Exception");
 		reasons.put(1, "No Logined");
+		reasons.put(90,"resource not exists");
+		reasons.put(91,"load resource error");
+		reasons.put(92,"save resource error");
+		reasons.put(93,"delete resource error");
+
 		reasons.put(100, "Insufficient authority");
 		reasons.put(201, "NO FOUND DATA WITH JDBC"); //Select One 
 		reasons.put(202,"EMPTY SET SENTENCE IN UPDATE WITH JDBC");
+		
+		reasons.put(301, "upload file size is largeer than setting");
 		
 	}
 

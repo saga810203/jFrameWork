@@ -50,7 +50,8 @@ public final class DataEntryFactory {
 	}
 
 	public static String serialize(DbUniqu uniqu) throws UnsupportedEncodingException {
-		if(uniqu ==null) return "";
+		if (uniqu == null)
+			return "";
 		StringBuilder sb = new StringBuilder();
 		sb.append(Base64.encode(uniqu.getName()));
 
@@ -147,7 +148,8 @@ public final class DataEntryFactory {
 	}
 
 	public static String serialize(DataEntry entry) throws UnsupportedEncodingException {
-		if(null == entry) return "";
+		if (null == entry)
+			return "";
 		StringBuilder sb = new StringBuilder();
 
 		int kind = entry.getKind();
@@ -182,7 +184,7 @@ public final class DataEntryFactory {
 			entry = new Table();
 			((Table) entry).setFromSentence(Base64.decode(ss[4]));
 			((Table) entry).setPrimaryKey(deSerializeDbUniqu(ss[5]));
-			((Table) entry).setUniqus(deSerializeDbUniquss(ss.length>6?ss[6]:null));
+			((Table) entry).setUniqus(deSerializeDbUniquss(ss.length > 6 ? ss[6] : null));
 		} else if (kind == DataEntry.VIEW) {
 			entry = new View();
 			((View) entry).setFromSentence(Base64.decode(ss[4]));
@@ -310,51 +312,53 @@ public final class DataEntryFactory {
 	}
 
 	public static void genTableDDL(Table table, StringBuilder sb) {
-		sb.append("CREATE TABLE ").append(table.getFromSentence()).append(" (");
-		boolean first = true;
-		for (ListIterator<CalcColumn> it = table.getAllColumn().listIterator(); it.hasNext();) {
-			Column col = (Column) it.next();
-			if (first) {
-				first = false;
-			} else {
-				sb.append(",");
-			}
-			sb.append(col.getSqlName()).append(" ").append(col.getDbType());
-			if(!col.isNullable()) sb.append(" ").append("NOT NULL");
-		}
-		sb.append(");\r\n");
-		DbUniqu qu = table.getPrimaryKey();
-		if(qu!= null){
-			sb.append("ALTER TABLE ").append(table.getFromSentence()).append(" ADD PRIMARY KEY (");
-			first = true;
-			for(String key:qu.getColumns()){
-				Column col =(Column) table.getCalcColumnByJavaName(key);
+		if (table.isCreate()) {
+			sb.append("CREATE TABLE ").append(table.getFromSentence()).append(" (");
+			boolean first = true;
+			for (ListIterator<CalcColumn> it = table.getAllColumn().listIterator(); it.hasNext();) {
+				Column col = (Column) it.next();
 				if (first) {
 					first = false;
 				} else {
 					sb.append(",");
 				}
-				sb.append(col.getSqlName());
-				
-				
+				sb.append(col.getSqlName()).append(" ").append(col.getDbType());
+				if (!col.isNullable())
+					sb.append(" ").append("NOT NULL");
 			}
-			
 			sb.append(");\r\n");
-		}
-		
-		for(DbUniqu qnu: table.getUniqus()){
-			sb.append("ALTER TABLE ").append(table.getFromSentence()).append(" ADD UNIQUE (");
-			first = true;
-			for(String key:qnu.getColumns()){
-				Column col =(Column) table.getCalcColumnByJavaName(key);
-				if (first) {
-					first = false;
-				} else {
-					sb.append(",");
+			DbUniqu qu = table.getPrimaryKey();
+			if (qu != null) {
+				sb.append("ALTER TABLE ").append(table.getFromSentence()).append(" ADD PRIMARY KEY (");
+				first = true;
+				for (String key : qu.getColumns()) {
+					Column col = (Column) table.getCalcColumnByJavaName(key);
+					if (first) {
+						first = false;
+					} else {
+						sb.append(",");
+					}
+					sb.append(col.getSqlName());
+
 				}
-				sb.append(col.getDbType());
+
+				sb.append(");\r\n");
 			}
-			sb.append(");\r\n");
+
+			for (DbUniqu qnu : table.getUniqus()) {
+				sb.append("ALTER TABLE ").append(table.getFromSentence()).append(" ADD UNIQUE (");
+				first = true;
+				for (String key : qnu.getColumns()) {
+					Column col = (Column) table.getCalcColumnByJavaName(key);
+					if (first) {
+						first = false;
+					} else {
+						sb.append(",");
+					}
+					sb.append(col.getDbType());
+				}
+				sb.append(");\r\n");
+			}
 		}
 	}
 

@@ -64,7 +64,7 @@ public final class UpdateFactory {
 		for (ListIterator<org.jfw.apt.orm.core.model.CalcColumn> it = table.getAllColumn().listIterator(); it
 				.hasNext();) {
 			org.jfw.apt.orm.core.model.Column col = (org.jfw.apt.orm.core.model.Column) it.next();
-			if (excludeColumnJavaNames.contains(col))
+			if (excludeColumnJavaNames.contains(col.getJavaName()))
 				continue;
 			if (!col.isRenewable())
 				continue;

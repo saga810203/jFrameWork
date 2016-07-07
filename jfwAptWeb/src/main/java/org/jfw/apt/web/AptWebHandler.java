@@ -152,7 +152,14 @@ public class AptWebHandler extends CodeGenHandler {
 	}
 
 	public void writeMethodContent() throws AptException {
-		out.l("req.setCharacterEncoding(\"UTF-8\");").l("res.setCharacterEncoding(\"UTF-8\");");
+		// Set to expire far in the past.
+		out.l("res.setDateHeader(\"Expires\", 0);");
+		// Set standard HTTP/1.1 no-cache headers.
+		out.l("res.setHeader(\"Cache-Control\", \"no-store, no-cache, must-revalidate\");");
+		// Set IE extended HTTP/1.1 no-cache headers (use addHeader).
+		out.l("res.addHeader(\"Cache-Control\", \"post-check=0, pre-check=0\");");
+		// Set standard HTTP/1.0 no-cache header.
+		out.l("res.setHeader(\"Pragma\", \"no-cache\");");
 		if (!this.returnType.equals("void")) {
 			out.bL(this.returnType).w(" result").el(Util.isPrimitive(this.returnType) ? ";" : " = null ;");
 		}

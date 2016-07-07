@@ -167,6 +167,7 @@ public final class WhereFactory {
 	public static WherePart build(Table table, Element methodRef, String paramName) throws AptException {
 		WherePart wherePart = new WherePart();
 		wherePart.setDynamic(false);
+		wherePart.setAnd(true);
 		wherePart.setStaticSentence(getStaticWhereSql(methodRef));
 		List<WhereColumn> list = wherePart.getColumns();
 		handlePrimaryKey(table, list, methodRef, paramName);
