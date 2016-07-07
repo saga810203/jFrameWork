@@ -86,7 +86,6 @@ public final class ColumnHandlerFactory {
 			else
 				cls = annObj.handlerClass();
 		} catch (MirroredTypeException e) {
-
 			String cn = TypeName.get(e.getTypeMirror()).toString();
 			try {
 				cls = (Class<? extends ColumnHandler>) Class.forName(cn);

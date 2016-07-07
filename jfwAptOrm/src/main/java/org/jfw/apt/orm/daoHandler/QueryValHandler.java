@@ -38,10 +38,11 @@ public class QueryValHandler extends BaseQueryHandler {
 			throw new AptException(ref,
 					"Method[@" + QueryVal.class.getName() + "] must has @" + Column.class.getName());
 
-		String fieldname = Util.emptyToNull(col.value());
-		if (fieldname == null)
+		if(col.value() == null || col.value().length!= 1 || Util.emptyToNull(col.value()[0]) == null)
 			throw new AptException(ref,
-					"Method[@" + QueryVal.class.getName() + "] must set @" + Column.class.getName() + "'value");
+					"Method[@" + QueryVal.class.getName() + "] must set @" + Column.class.getName() + "'value  only one unEmtyp String");
+		
+		String fieldname = col.value()[0].trim();
 		Class<? extends ColumnHandler> hc = ColumnHandlerFactory.getHandlerClass(col, ref);
 		if (hc == null)
 			throw new AptException(ref,

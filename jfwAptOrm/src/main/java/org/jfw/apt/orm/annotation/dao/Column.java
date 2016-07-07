@@ -13,7 +13,7 @@ public @interface Column {
 	 * column in where :  ID   A.ID 
 	 * @return
 	 */
-	String value();
+	String[] value();
 	/**
 	 * 
 	 * @return

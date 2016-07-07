@@ -11,6 +11,7 @@ import org.jfw.apt.Util;
 import org.jfw.apt.exception.AptException;
 import org.jfw.apt.model.MethodEntry;
 import org.jfw.apt.model.MethodParamEntry;
+import org.jfw.apt.orm.OrmAnnoCheckUtil;
 import org.jfw.apt.orm.annotation.dao.Dynamic;
 import org.jfw.apt.annotation.Nullable;
 import org.jfw.apt.orm.annotation.dao.method.IncludeFixSet;
@@ -105,7 +106,7 @@ public final class UpdateFactory {
 	}
 
 	public static void handleSet(LinkedList<UpdateColumn> list, MethodParamEntry mpe, Table table) throws AptException {
-
+		Element ele = mpe.getRef();
 		Set set = mpe.getRef().getAnnotation(Set.class);
 		if (null == set)
 			return;
@@ -118,52 +119,57 @@ public final class UpdateFactory {
 		String paramType = mpe.getTypeName();
 
 		Alias alias = mpe.getRef().getAnnotation(Alias.class);
-		String fn = alias == null ? null : Util.emptyToNull(alias.value());
-		if (fn == null)
-			fn = mpe.getName();
-		CalcColumn col = table.getCalcColumnByJavaName(fn);
-		if (col == null)
-			throw new AptException(mpe.getRef(), "no found attr[" + fn + "] in class[" + table.getJavaName() + "}");
-		
-		Class<? extends ColumnHandler> handlerClass = col.getHandlerClass();
-		
-		String spc = ColumnHandlerFactory.get(handlerClass).supportsClass();
+		if (alias != null)
+			OrmAnnoCheckUtil.check(ele, alias, table);
 
-		if (!paramType.equals(spc)) {
-			
-			Class<? extends ColumnHandler> related = ColumnHandlerFactory.getRelatedHandler(handlerClass);
-			if ((null == related) || (!paramType.equals(ColumnHandlerFactory.get(related).supportsClass())))
-				throw new AptException(mpe.getRef(), "param Type unEquals ColumnHandler.supportClass");	
-			
-			handlerClass = related;
-			
-			if(!Util.isPrimitive(paramType)){
-				withDynamic = true;	
+		String[] cns = alias == null ? new String[] { mpe.getName() } : alias.value();
+
+		for (String cn : cns) {
+			String fn = cn.trim();
+			CalcColumn col = table.getCalcColumnByJavaName(fn);
+			if (col == null)
+				throw new AptException(mpe.getRef(), "no found attr[" + fn + "] in class[" + table.getJavaName() + "}");
+
+			Class<? extends ColumnHandler> handlerClass = col.getHandlerClass();
+
+			String spc = ColumnHandlerFactory.get(handlerClass).supportsClass();
+
+			if (!paramType.equals(spc)) {
+
+				Class<? extends ColumnHandler> related = ColumnHandlerFactory.getRelatedHandler(handlerClass);
+				if ((null == related) || (!paramType.equals(ColumnHandlerFactory.get(related).supportsClass())))
+					throw new AptException(mpe.getRef(), "param Type unEquals ColumnHandler.supportClass");
+
+				handlerClass = related;
+
+				if (!Util.isPrimitive(paramType)) {
+					withDynamic = true;
+				}
 			}
-		}
-		if((!col.isNullable()) && ( null != mpe.getRef().getAnnotation(Nullable.class)) ){
-			withDynamic = true;
-		}
-		
-		UpdateColumn uc = new UpdateColumn();
-		uc.setName(mpe.getName());
-		uc.setCacheValue(false);
-		uc.setSetSql(col.getSqlName() + el);
-		uc.setHandlerClass(handlerClass);
-		if (Util.isPrimitive(paramType)) {
-			uc.setNullable(false);
-			uc.setDynamic(false);
-			list.addFirst(uc);
-			return;
-		}else if(withDynamic){
-			uc.setDynamic(true);
-			uc.setNullable(true);
-			list.addLast(uc);
-			
-		}else{
-			uc.setDynamic(false);
-			uc.setNullable(col.isNullable());
-			list.addFirst(uc);
+			if ((!col.isNullable()) && (null != mpe.getRef().getAnnotation(Nullable.class))) {
+				withDynamic = true;
+			}
+
+			UpdateColumn uc = new UpdateColumn();
+			uc.setName(mpe.getName());
+			uc.setCacheValue(false);
+			uc.setSetSql(col.getSqlName() + el);
+			uc.setHandlerClass(handlerClass);
+			if (Util.isPrimitive(paramType)) {
+				uc.setNullable(false);
+				uc.setDynamic(false);
+				list.addFirst(uc);
+				return;
+			} else if (withDynamic) {
+				uc.setDynamic(true);
+				uc.setNullable(true);
+				list.addLast(uc);
+
+			} else {
+				uc.setDynamic(false);
+				uc.setNullable(col.isNullable());
+				list.addFirst(uc);
+			}
 		}
 	}
 

@@ -3,9 +3,9 @@ package org.jfw.apt.orm.daoHandler;
 import javax.lang.model.element.Element;
 
 import org.jfw.apt.Util;
+import org.jfw.apt.annotation.Nullable;
 import org.jfw.apt.exception.AptException;
 import org.jfw.apt.orm.annotation.dao.Column;
-import org.jfw.apt.annotation.Nullable;
 import org.jfw.apt.orm.annotation.dao.method.From;
 import org.jfw.apt.orm.annotation.dao.method.operator.QueryValList;
 import org.jfw.apt.orm.core.ColumnHandler;
@@ -34,10 +34,11 @@ public class QueryValListHandler extends BaseQueryHandler {
 			throw new AptException(ref,
 					"Method[@" + QueryValList.class.getName() + "] must has @" + Column.class.getName());
 
-		String fieldname = Util.emptyToNull(col.value());
-		if (fieldname == null)
+		if(col.value() == null || col.value().length!= 1 || Util.emptyToNull(col.value()[0]) == null)
 			throw new AptException(ref,
-					"Method[@" + QueryValList.class.getName() + "] must set @" + Column.class.getName() + "'value");
+					"Method[@" + QueryValList.class.getName() + "] must set @" + Column.class.getName() + "'value  only one unEmtyp String");
+		
+		String fieldname = col.value()[0].trim();
 		Class<? extends ColumnHandler> hc =  ColumnHandlerFactory.getHandlerClass(col,ref);
 		if (hc == null)
 			throw new AptException(ref, "Method[@" + QueryValList.class.getName() + "] must set @"
