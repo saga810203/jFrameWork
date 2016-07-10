@@ -1,4 +1,4 @@
-package org.jfw.web.servlet;
+package org.jfw.web.servlet.core;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

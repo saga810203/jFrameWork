@@ -46,6 +46,13 @@ public final class UpdateFactory {
 					if (col != null)
 						ret.add(col);
 				}
+			}else{
+				for(CalcColumn col:table.getAllColumn()){
+					org.jfw.apt.orm.core.model.Column c = (org.jfw.apt.orm.core.model.Column)col;
+					if(null!= c.getFixSqlValueWithUpdate()){
+						ret.add(c);
+					}	
+				}
 			}
 		}
 		return ret;

@@ -1,92 +1,158 @@
 package org.jfw.util.auth;
 
+import java.util.Arrays;
+import java.util.Random;
+
+import org.jfw.util.codec.Base64;
 
 public final class AuthUtil {
-	
-	private static final int[] AUTH_BIT = new int[]{1,2,4,8,16,32,64,128};
-	
-	private static final int[] AUTH_BIT_XOR = new int[8];
-	
-	private AuthUtil(){}
-	
-	public static boolean hasAuthority(byte[] auths,int auth){
-		if(auth <1) return false;
-		int bIndex = auth >> 3;
-		if(bIndex>= auths.length) return false;
-		byte b = auths[bIndex];		
-		int  ind = auth % 8;
-		return 0 != ( (b & 0xff) & AUTH_BIT[ind]);		
+
+	private static final int[] AUTH_BIT = new int[] { 1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192,
+			16384, 32768, 65536, 131072, 262144, 524288, 1048576, 2097152, 4194304, 8388608, 16777216, 33554432,
+			67108864, 134217728, 268435456, 536870912, 1073741824, -2147483648 };
+
+	private static final int[] AUTH_BIT_XOR = new int[] { -2, -3, -5, -9, -17, -33, -65, -129, -257, -513, -1025, -2049,
+			-4097, -8193, -16385, -32769, -65537, -131073, -262145, -524289, -1048577, -2097153, -4194305, -8388609,
+			-16777217, -33554433, -67108865, -134217729, -268435457, -536870913, -1073741825, 2147483647 };
+
+	private AuthUtil() {
 	}
-	
-	public static byte[] grant(byte[] auths,int auth){
-		if(auth<1) return auths;
-		int bIndex = auth >> 3;
-		if(bIndex>=auths.length){
-			byte[] nAuths = new byte[bIndex+1];
-			System.arraycopy(auths,0, nAuths, 0,auths.length);
-			for(int i = auths.length; i < nAuths.length; ++i){
+
+	public static boolean hasAuthority(int[] auths, int auth) {
+		if (auth < 1)
+			return false;
+		int bIndex = auth >> 5;
+		if (bIndex >= auths.length)
+			return false;
+		int ind = auth % 32;
+		return 0 != (auths[bIndex] & AUTH_BIT[ind]);
+	}
+
+	public static int[] grant(int[] auths, int auth) {
+		if (auth < 1)
+			return auths;
+		int bIndex = auth >> 5;
+		if (bIndex >= auths.length) {
+			int[] nAuths = new int[bIndex + 1];
+			System.arraycopy(auths, 0, nAuths, 0, auths.length);
+			for (int i = auths.length; i < nAuths.length; ++i) {
 				nAuths[i] = 0;
 			}
 			auths = nAuths;
 		}
-		int ind= auth % 8;
-		int b = auths[bIndex] & 0xff;
-		auths[bIndex] =(byte)( b | AUTH_BIT[ind]);
+		int ind = auth % 32;
+		auths[bIndex] = auths[bIndex] | AUTH_BIT[ind];
 		return auths;
+	}
+
+	public static int[] revoke(int[] auths, int auth) {
+		if (auth < 1)
+			return auths;
+		int bIndex = auth >> 5;
+		if (bIndex >= auths.length)
+			return auths;
+		int ind = auth % 32;
+		auths[bIndex] = auths[bIndex] & AUTH_BIT_XOR[ind];
+		return auths;
+	}
+
+	public static int[] merge(int[][] auths){
+		if(auths ==null) return new int[]{0};
+		if(auths.length==0) return auths[0];
+		int maxLen = auths[0].length;
+		for(int i = 1; i < auths.length ; ++i){
+			int eLen = auths[i].length;
+			if(eLen>maxLen) maxLen = eLen;
+		}
+		int[] result = new int[maxLen];
+		Arrays.fill(result, 0);
+		for(int i = 0 ; i <  auths.length; ++i){
+			int[] auth = auths[i];
+			int eLen = auth.length;
+			for(int j = 0 ; j < eLen; ++j){
+				result[j] = result[j] | auth[j];
+			}
+		}
+		return result;
 	}
 	
-	public static byte[] revoke(byte[] auths,int auth){
-		if(auth<1) return auths;
-		int bIndex = auth >> 3;
-		if(bIndex>=auths.length) return auths;
-		int ind= auth % 8;
-		int b = auths[bIndex] & 0xff;
-		auths[bIndex] =(byte)( b & AUTH_BIT_XOR[ind]) ;
-		return auths;
-	}
-	public static byte[] reBuild(byte[] auths){
-		int last = auths.length - 1;  //10  - 1  =   9
-		if((last ==0) || (auths[last]!=0)) return auths;
-		--last;                       //8
-		for(;last>0 ;--last){
-			if(auths[last]!=0) break;			
+	public static int[] reBuild(int[] auths) {
+		int last = auths.length - 1; // 10 - 1 = 9
+		if ((last == 0) || (auths[last] != 0))
+			return auths;
+		--last; // 8
+		for (; last > 0; --last) {
+			if (auths[last] != 0)
+				break;
 		}
 		++last;
-		byte[] nAuths = new byte[last];
-		System.arraycopy(auths,0, nAuths, 0, last);
-		return nAuths;		
+		int[] nAuths = new int[last];
+		System.arraycopy(auths, 0, nAuths, 0, last);
+		return nAuths;
 	}
-	
-	
-	
-	public static void main(String main[]){		
-      byte[] b = new byte[]{0};
-      
-     for(int i = 1; i < 100 ; ++i){
-    	 b = grant(b,i);
-     }
-     
-     b = revoke(b, 10);
-     
-     b = revoke(b, 15);
-     b = revoke(b, 20);
-     b = revoke(b, 30);
-     b = revoke(b, 45);
-     b = revoke(b, 65);
-     b = revoke(b, 90);
-     b = revoke(b, 99);
-      
-      for(int i = 1; i < 100; ++i){
-    	  System.out.println(""+i + ":"+hasAuthority(b, i));
-    	  
-    	  
-      }
+
+	public static int[] conver(byte[] auths) {
+		if (auths == null || auths.length == 0)
+			return new int[0];
+		byte[] nAuths = auths;
+		int bLen = auths.length;
+		int lDiv = bLen % 4;
+		if (lDiv != 0) {
+			bLen += (4 - lDiv);
+			nAuths = new byte[bLen];
+			nAuths[bLen - 1] = 0;
+			nAuths[bLen - 2] = 0;
+			nAuths[bLen - 3] = 0;
+			System.arraycopy(auths, 0, nAuths, 0, auths.length);
+		}
+		int iLen = bLen / 4;
+		int[] result = new int[iLen];
+		int bIndex = 0;
+
+		for (int i = 0; i < iLen; ++i) {
+			result[i] = ((nAuths[bIndex++] & 0xff) << 24) | ((nAuths[bIndex++] & 0xff) << 16)
+					| ((nAuths[bIndex++] & 0xff) << 8) | (nAuths[bIndex++] & 0xff);
+		}
+		return result;
+	}
+
+	public static byte[] conver(int[] auths) {
+		if (auths == null || auths.length == 0)
+			return new byte[0];
+		byte[] result = new byte[auths.length * 4];
+		int bIndex = 0;
+		for (int i = 0; i < auths.length; ++i) {
+			int auth = auths[i];
+			result[bIndex++] = (byte) ((auth >> 24) & 0xFF);
+			result[bIndex++] = (byte) ((auth >> 16) & 0xFF);
+			result[bIndex++] = (byte) ((auth >> 8) & 0xFF);
+			result[bIndex++] = (byte) (auth & 0xFF);
+		}
+		return result;
 	}
 
 	
-	static {
-		for( int i = 0 ; i < 8 ; ++i){
-			AUTH_BIT_XOR[i] = AUTH_BIT[i]  ^ (-1);
-		}
+	public static String serialAuth(int[] auths){
+		return Base64.encodeBase64String(conver(auths));	
 	}
+	public static int[] deSerialAuth(String authStr){
+		if(authStr==null || authStr.length()==0) return new int[]{0};
+		return conver(Base64.decodeBase64(authStr));
+	}
+	
+	public static void main(String main[]) {
+		System.out.println(System.currentTimeMillis());
+		int[] iss = new int[100];
+		for (int i = 0; i < iss.length; ++i)
+		{
+			iss[i] = (new Random()).nextInt();
+		}
+		byte[] bs = conver(iss);
+		int[] ins = conver(bs);
+		for (int ii = 0; ii < ins.length; ++ii) {
+			System.out.println("" + iss[ii] + ":" + ins[ii]);
+		}
+		System.out.println(System.currentTimeMillis());
+	}
+
 }

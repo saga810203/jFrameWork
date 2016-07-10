@@ -60,4 +60,15 @@ public class IoUtil {
 				in.close();
 		}
 	}
+
+	public static void saveStream(OutputStream out, byte[] data, boolean close) throws IOException {
+		try {
+			out.write(data);
+			out.flush();
+		} finally {
+			if (close)
+				out.close();
+		}
+	}
+
 }

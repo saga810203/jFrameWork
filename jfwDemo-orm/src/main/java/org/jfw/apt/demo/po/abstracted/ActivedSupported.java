@@ -5,7 +5,7 @@ import org.jfw.apt.orm.annotation.entry.Column;
 import org.jfw.apt.orm.annotation.entry.VirtualTable;
 import org.jfw.apt.orm.core.enums.DE;
 
-@JfwAptConfig("DB_PAGE:PostgreSQL")
+@JfwAptConfig("DB:PostgreSQL")
 @VirtualTable
 public interface ActivedSupported {
 	@Column(DE.boolean_de)

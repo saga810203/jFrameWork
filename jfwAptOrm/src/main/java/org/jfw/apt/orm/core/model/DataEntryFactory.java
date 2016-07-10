@@ -355,7 +355,7 @@ public final class DataEntryFactory {
 					} else {
 						sb.append(",");
 					}
-					sb.append(col.getDbType());
+					sb.append(col.getSqlName());
 				}
 				sb.append(");\r\n");
 			}

@@ -1,4 +1,4 @@
-package org.jfw.web.servlet;
+package org.jfw.web.servlet.core;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.jfw.util.context.JfwAppContext;
 import org.jfw.util.web.ControllerMethod;
 import org.jfw.util.web.WebHandlerContext;
 
@@ -43,6 +44,7 @@ public class BaseServlet extends HttpServlet{
 			th.printStackTrace(new PrintWriter(sw));
 			failReason = sw.toString();
 		}
+		JfwAppContext.destory();
 	}
 	
 	
