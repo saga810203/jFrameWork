@@ -26,6 +26,24 @@ public final class OrmAnnoCheckUtil {
 			}
 		}
 	}
+	
+	public static void check(Element ele,org.jfw.apt.orm.annotation.dao.param.SqlColumn col) throws AptException{
+		if(null== ColumnHandlerFactory.getHandlerClass(col, ele))
+			throw new AptException(ele, "invalid annotation value:@"
+					+ org.jfw.apt.orm.annotation.dao.param.SqlColumn.class.getName() + "'handlerClass is null or unsupported");
+		
+		if (col.value() == null || col.value().length == 0) {
+			throw new AptException(ele, "invalid annotation value:@"
+					+ org.jfw.apt.orm.annotation.dao.param.SqlColumn.class.getName() + "'value is null or empty");
+		}
+
+		for (String n : col.value()) {
+			if (null == n || n.trim().length() == 0) {
+				throw new AptException(ele, "invalid annotation value:@"
+						+ org.jfw.apt.orm.annotation.dao.param.SqlColumn.class.getName() + "'value contains null or empty");
+			}
+		}
+	}
 
 	public static void check(Element ele,Alias alias,DataEntry de) throws AptException{
 		if (alias.value() == null || alias.value().length == 0) {

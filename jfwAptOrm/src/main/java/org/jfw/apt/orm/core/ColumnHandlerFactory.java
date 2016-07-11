@@ -120,6 +120,23 @@ public final class ColumnHandlerFactory {
 		}
 		return cls;
 	}
+	
+	public static Class<? extends ColumnHandler> getHandlerClass(org.jfw.apt.orm.annotation.dao.param.SqlColumn annObj,
+			Element ref) throws AptException {
+		Class<? extends ColumnHandler> cls;
+		try {
+			cls = annObj.handlerClass();
+		} catch (MirroredTypeException e) {
+
+			String cn = TypeName.get(e.getTypeMirror()).toString();
+			try {
+				cls = (Class<? extends ColumnHandler>) Class.forName(cn);
+			} catch (ClassNotFoundException e1) {
+				throw new AptException(ref, "Class[" + cn + "] must complied befor this operation");
+			}
+		}
+		return cls;
+	}
 	public static ColumnHandler get(org.jfw.apt.orm.annotation.dao.Column annObj, Element ref) throws AptException {
 		return get(getHandlerClass(annObj,ref));
 	}

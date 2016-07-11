@@ -31,6 +31,7 @@ import org.jfw.apt.orm.core.model.CalcColumn;
 import org.jfw.apt.orm.core.model.DataEntry;
 import org.jfw.apt.orm.core.model.DbUniqu;
 import org.jfw.apt.orm.core.model.ParamColumn;
+import org.jfw.apt.orm.core.model.ParamSqlColumn;
 import org.jfw.apt.orm.core.model.Table;
 
 public final class WhereFactory {
@@ -45,6 +46,35 @@ public final class WhereFactory {
 		List<ParamColumn> paramColumns = null;
 		Class<? extends ColumnHandler> handlerClass = null;
 		boolean nullable = Util.isPrimitive(mpe.getTypeName()) ? false : (null != ref.getAnnotation(Nullable.class));
+		for(ParamSqlColumn psc: ParamSqlColumn.build(mpe, entry)){
+			ret = true;
+			handlerClass = psc.getHandlerClass();
+			String tn = mpe.getTypeName();
+			String sn = ColumnHandlerFactory.get(handlerClass).supportsClass();
+			if (!tn.equals(sn)) {
+				Class<? extends ColumnHandler> related = ColumnHandlerFactory.getRelatedHandler(handlerClass);
+				if ((null == related) || (!tn.equals(ColumnHandlerFactory.get(related).supportsClass())))
+					throw new AptException(ref, "param Type unEquals ColumnHandler.supportClass");
+				if (Util.isPrimitive(ColumnHandlerFactory.supportedType(handlerClass))) {
+					nullable = true;
+				}
+				handlerClass = related;
+			}
+
+			WhereColumn wc = new WhereColumn();
+			wc.setHandlerClass(handlerClass);
+			wc.setName(mpe.getName());
+			wc.setNullable(nullable);
+			wc.setWhereSql(psc.getSql());
+			wc.setCacheValue(false);
+			if (nullable)
+				result.addLast(wc);
+			else
+				result.addFirst(wc);
+			
+		}
+		
+		
 		for (Class<? extends Annotation> cls : supportedClass) {
 			Annotation anObj = mpe.getRef().getAnnotation(cls);
 			if (anObj == null)

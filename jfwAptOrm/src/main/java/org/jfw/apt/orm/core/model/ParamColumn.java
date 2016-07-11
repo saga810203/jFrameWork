@@ -61,7 +61,7 @@ public final class ParamColumn {
 				CalcColumn c = entry.getCalcColumnByJavaName(cn);
 				if(c==null)throw new AptException(ele, "not found annotation:@" + Column.class.getName()+ " or invlaid param name with column javaname");
 				ParamColumn pc = new ParamColumn();
-				pc.name =cn;
+				pc.name =c.getSqlName();
 				pc.handlerClass = c.getHandlerClass();
 				result.add(pc);
 			}	
