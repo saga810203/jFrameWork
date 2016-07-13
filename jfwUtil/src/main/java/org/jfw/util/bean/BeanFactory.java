@@ -48,7 +48,7 @@ import org.jfw.util.sort.DependSortService;
 public class BeanFactory {
 	public Object getBean(String id) {
 		Object result = this.eles.get(id);
-		if (result == null) {
+		if (result == null && null != this.parent) {
 			result = this.parent.getBean(id);
 		}
 		return result;

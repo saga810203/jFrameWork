@@ -24,6 +24,7 @@ import org.jfw.apt.web.annotation.operate.Post;
 import org.jfw.apt.web.annotation.operate.Put;
 import org.jfw.apt.web.handlers.BuildParamHandler;
 import org.jfw.apt.web.handlers.ChangeResultHandler;
+import org.jfw.apt.web.handlers.CharacterEncodingHandler;
 import org.jfw.apt.web.handlers.ExecuteHandler;
 import org.jfw.apt.web.handlers.JdbcConnectionHandler;
 import org.jfw.apt.web.handlers.LastScriptHandler;
@@ -346,6 +347,7 @@ public class AptWebHandler extends CodeGenHandler {
 	}
 
 	static {
+		supportedClass.add(CharacterEncodingHandler.class);
 		supportedClass.add(ViewHandler.class);
 		supportedClass.add(LoginUserHandler.class);
 		supportedClass.add(BuildParamHandler.class);

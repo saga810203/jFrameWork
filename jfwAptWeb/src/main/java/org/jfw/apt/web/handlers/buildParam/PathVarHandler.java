@@ -36,7 +36,7 @@ public final class PathVarHandler implements BuildParameter {
 		
 		aptWebHandler.readURI();
 		String val = mpe.getName().trim();
-		String path = aptWebHandler.getMethodUrl();
+		String path =aptWebHandler.getUrl()+ aptWebHandler.getMethodUrl();
 		int pathIndex = getIndexInPath(val, path) - 1;
 		if (pathIndex < 0)
 			throw new AptException(mpe.getRef(), "invalid annotation @PathVar ");

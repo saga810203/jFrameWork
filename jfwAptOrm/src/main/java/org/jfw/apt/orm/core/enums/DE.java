@@ -28,8 +28,11 @@ public enum DE {
 	Double_de(WDoubleHandler.class,"DOUBLE",true,true,true,true,null,null),
 	
 
-	string_de(StringHandler.class, "VARCHAR2(255)",false,true,true,true,null,null),
-	String_de(StringHandler.class, "VARCHAR2(255)",true,true,true,true,null,null),
+	string_de(StringHandler.class, "VARCHAR(255)",false,true,true,true,null,null),
+	String_de(StringHandler.class, "VARCHAR(255)",true,true,true,true,null,null),
+	
+	string_de2(StringHandler.class, "VARCHAR(255)",false,true,true,true,null,null),
+	String_de2(StringHandler.class, "VARCHAR(255)",true,true,true,true,null,null),
 	
 	dictCode(StringHandler.class, "VARCHAR(32)",false,true,true,true,null,null),
 	DictCode(StringHandler.class, "VARCHAR(32)",true,true,true,true,null,null),
@@ -38,7 +41,7 @@ public enum DE {
 
 	
 	id_10(FixLenStringHandler.class,"CHAR(10)",false,true,false,true,null,null),
-	id_32(FixLenStringHandler.class,"CHAR(10)",false,true,false,true,null,null),
+	id_32(FixLenStringHandler.class,"CHAR(32)",false,true,false,true,null,null),
 	
 	date_de(FixLenStringHandler.class,"CHAR(8)",false,true,true,true,null,null),
 	Date_de(FixLenStringHandler.class,"CHAR(8)",true,true,true,true,null,null),

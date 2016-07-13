@@ -33,7 +33,7 @@ public class QueryOneHandler extends BaseQueryHandler {
 	protected void buildResult() {
 
 		cw.l("if(rs.next()){");
-		cw.bL(this.returnClassName).el("_result = new ").w(this.returnClassName).el("();");
+		cw.bL(this.returnClassName).w(" _result = new ").w(this.returnClassName).el("();");
 		int i = 1;
 		for (ListIterator<CalcColumn> it = this.fields.listIterator(); it.hasNext();) {
 			CalcColumn col = it.next();
