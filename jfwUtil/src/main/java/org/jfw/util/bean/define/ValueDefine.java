@@ -65,8 +65,12 @@ public abstract class ValueDefine implements Comparable<ValueDefine> {
 			return java.math.BigDecimal.class;
 		} else if (cls.equals("java.lang.Class")) {
 			return java.lang.Class.class;
+		}else if(cls.equals("java.io.File")){
+			return java.io.File.class;
+		}else if(cls.equals("java.new.URL")){
+			return java.net.URL.class;
 		}
-		throw new RuntimeException("UnsupportedClass[" + cls + "] with fixvalue in BeanFactory cofig");
+		throw new RuntimeException("UnsupportedClass[" + cls + "] with fixvalue in BeanFactory config");
 	}
 
 	public static ValueDefine build(BeanFactory bf, String name, Class<?> clazz, boolean isRef, String val)

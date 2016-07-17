@@ -38,7 +38,7 @@ public final class RequestBodyHandler implements BuildParameter {
 		boolean parameterized = tn.indexOf("<") >= 0;
 		cw.bL(mpe.getTypeName()).w(" ").w(mpe.getName()).el(" =  null;");
 		String localName = cw.getMethodTempVarName();
-		cw.bL("java.io.InputStream ").w(localName).el(" = req.getInputStream();").bL("try{").w(mpe.getName())
+		cw.bL("java.io.InputStream ").w(localName).el(" = req.getInputStream();").l("try{").bL(mpe.getName())
 				.w(" = ");
 		if (!parameterized) {
 			cw.w("org.jfw.util.json.JsonService.fromJson(new java.io.InputStreamReader(").w(localName)
@@ -46,8 +46,8 @@ public final class RequestBodyHandler implements BuildParameter {
 		} else {
 			cw.w("org.jfw.util.json.JsonService.<").w(tn).w(">fromJson(new java.io.InputStreamReader(")
 					.w(localName)
-					.w(", org.jfw.util.ConstData.UTF8),new new org.jfw.util.reflect.TypeReference<").w(tn)
-					.el(">(){}.getType() );");
+					.w(", org.jfw.util.ConstData.UTF8),(new org.jfw.util.reflect.TypeReference<").w(tn)
+					.el(">(){}).getType());");
 		}
 		cw.l("}finally{").bL(localName).el(".close();").l("}");
 

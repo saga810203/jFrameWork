@@ -7,8 +7,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
@@ -18,6 +20,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.jfw.util.ListUtil;
 import org.jfw.util.StringUtil;
 import org.jfw.util.context.JfwAppContext;
 import org.jfw.util.exception.JfwBaseException;
@@ -32,6 +35,8 @@ public class CachedUploadServlet extends HttpServlet {
 	private Map<String, Long> cacheMap = new ConcurrentHashMap<String, Long>();
 
 	private LinkedList<String> cleanKeys = new LinkedList<String>();
+
+	private List<String> suffixs;
 
 	private boolean serviced = false;
 	private CachedUploadServletConfig config;
@@ -185,11 +190,20 @@ public class CachedUploadServlet extends HttpServlet {
 		return result;
 	}
 
+	private boolean matchExt(String fn) {
+		if (!this.suffixs.isEmpty()) {
+			int index = fn.lastIndexOf('.');
+			if (index < 0)
+				return false;
+			return this.suffixs.contains(fn.substring(index).toLowerCase(Locale.US));
+		}
+		return true;
+	}
+
 	private List<CachedItem> upload(HttpServletRequest req, int countLimit, long sizeLimit) throws JfwBaseException {
 		List<CachedItem> items = new LinkedList<CachedItem>();
 		if (!UploadItemIteratorImpl.isMultipartContent(req))
 			return items;
-		String fileSuffix = this.config.getFileSuffix();
 		String fieldName = null;
 		String fileName = null;
 		try {
@@ -205,7 +219,8 @@ public class CachedUploadServlet extends HttpServlet {
 							throw new JfwBaseException(303, "upload file count is larger than setting");
 						fileName = item.getName();
 						fieldName = item.getFieldName();
-						if (fileSuffix != null && !fileName.endsWith(fileSuffix)) {
+
+						if (!this.matchExt(fileName)) {
 							throw new JfwBaseException(302, "upload file type unsupported with setting");
 						}
 						// TODO: valid file sizeLimt user item.getSize();
@@ -288,6 +303,13 @@ public class CachedUploadServlet extends HttpServlet {
 				if (!path.mkdirs())
 					throw new Exception("servlet[" + this.getServletName() + "] mkdir cache path error");
 			}
+		}
+
+		String sTmp = this.config.getFileSuffix();
+		if (sTmp != null) {
+			this.suffixs = ListUtil.splitTrimExcludeEmpty(sTmp, ',');
+		} else {
+			this.suffixs = Collections.<String> emptyList();
 		}
 	}
 

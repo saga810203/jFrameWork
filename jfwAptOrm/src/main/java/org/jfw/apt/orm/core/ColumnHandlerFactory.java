@@ -12,6 +12,7 @@ import org.jfw.apt.orm.core.defaultImpl.BigDecimalHandler;
 import org.jfw.apt.orm.core.defaultImpl.BlobHandler;
 import org.jfw.apt.orm.core.defaultImpl.BooleanHandler;
 import org.jfw.apt.orm.core.defaultImpl.ByteHandler;
+import org.jfw.apt.orm.core.defaultImpl.ByteaHandler;
 import org.jfw.apt.orm.core.defaultImpl.DoubleHandler;
 import org.jfw.apt.orm.core.defaultImpl.FixLenStringHandler;
 import org.jfw.apt.orm.core.defaultImpl.FloatHandler;
@@ -36,7 +37,7 @@ public final class ColumnHandlerFactory {
 			ByteHandler.class, DoubleHandler.class, FixLenStringHandler.class, FloatHandler.class, IntHandler.class,
 			LongHandler.class, ShortHandler.class, StreamBlobHandler.class, StringHandler.class, WBooleanHandler.class,
 			WByteHandler.class, WDoubleHandler.class, WFloatHandler.class, WIntHandler.class, WLongHandler.class,
-			WShortHandler.class };
+			WShortHandler.class,ByteaHandler.class };
 
 	private final static Map<Class<? extends ColumnHandler>, Class<? extends ColumnHandler>> relatedHandlers = new HashMap<Class<? extends ColumnHandler>, Class<? extends ColumnHandler>>();
 
@@ -185,6 +186,7 @@ public final class ColumnHandlerFactory {
 
 		relatedHandlers.put(DoubleHandler.class, WDoubleHandler.class);
 		relatedHandlers.put(WDoubleHandler.class, DoubleHandler.class);
+		
 
 		try {
 			for (Class<?> cls : handlerClasses) {

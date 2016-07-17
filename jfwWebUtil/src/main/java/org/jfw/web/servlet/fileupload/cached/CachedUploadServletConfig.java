@@ -7,7 +7,7 @@ public class CachedUploadServletConfig {
 	
 	private File cachePath = null;
 	
-	private int countLimit = 1;
+	private int countLimit = -1;
 	private int defaultCountLimit = 1;
 	private long sizeLimit = -1;
 	private long defaultSizeLimit = -1;

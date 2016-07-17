@@ -73,18 +73,20 @@ public class JsonService {
 			out.write("null");
 		}
 	}
-	
-	
-	public static void write(Exception e,Writer out) throws IOException{
+
+	public static void write(Exception e, Writer out) throws IOException {
 		out.write("{\"success\":false,\"code\":");
-		if(e instanceof org.jfw.util.exception.JfwBaseException)
-		{out.write(((org.jfw.util.exception.JfwBaseException)e).getCode());}else{out.write(0);}
+		if (e instanceof org.jfw.util.exception.JfwBaseException) {
+			out.write(Integer.toString(((org.jfw.util.exception.JfwBaseException) e).getCode()));
+		} else {
+			out.write("0");
+		}
 		out.write(",\"msg\":");
-		write(e.getMessage(),out);
+		write(e.getMessage(), out);
 		out.write(",\"detailMsg\":");
 		StringWriter sw = new StringWriter();
 		e.printStackTrace(new PrintWriter(sw));
-		write(sw.toString(),out);
+		write(sw.toString(), out);
 		out.write("}");
 	}
 

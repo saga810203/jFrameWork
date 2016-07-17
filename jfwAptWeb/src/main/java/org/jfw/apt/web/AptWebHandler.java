@@ -30,6 +30,7 @@ import org.jfw.apt.web.handlers.JdbcConnectionHandler;
 import org.jfw.apt.web.handlers.LastScriptHandler;
 import org.jfw.apt.web.handlers.LoginUserHandler;
 import org.jfw.apt.web.handlers.ResultToNullHandler;
+import org.jfw.apt.web.handlers.SetCookieHandler;
 import org.jfw.apt.web.handlers.SetSessionHandler;
 import org.jfw.apt.web.handlers.ValidateParamHandler;
 import org.jfw.apt.web.handlers.ViewHandler;
@@ -262,11 +263,18 @@ public class AptWebHandler extends CodeGenHandler {
 	private boolean readedSession = false;
 	private boolean readedOut = false;
 	private boolean readedURI = false;
+	private boolean readCookie = false;
 
 	public void readURI() {
 		if (!readedURI) {
 			readedURI = true;
 			out.l("String[] _uriArray = (String[]) req.getAttribute(\"JFW_REQUEST_URL_ARRAY\");");
+		}
+	}
+	public void readCookie() {
+		if (!readCookie) {
+			readCookie = true;
+			out.l("javax.servlet.http.Cookie[] _cookies = req.getCookies();");
 		}
 	}
 
@@ -355,6 +363,7 @@ public class AptWebHandler extends CodeGenHandler {
 		supportedClass.add(JdbcConnectionHandler.class);
 		supportedClass.add(ExecuteHandler.class);
 		supportedClass.add(SetSessionHandler.class);
+		supportedClass.add(SetCookieHandler.class);
 		supportedClass.add(ChangeResultHandler.class);
 		supportedClass.add(LastScriptHandler.class);
 		supportedClass.add(ResultToNullHandler.class);

@@ -61,8 +61,8 @@ public enum DE {
 	blob(BlobHandler.class, "BLOB", false,true,true,true,null,null), 
 	Blob(BlobHandler.class, "BLOB", true,true,true,true,null,null), 
 	
-	bytea(BlobHandler.class, "BYTEA", false,true,true,true,null,null), 
-	Bytea(BlobHandler.class, "BYTEA", true,true,true,true,null,null), 
+	bytea(ByteaHandler.class, "BYTEA", false,true,true,true,null,null), 
+	Bytea(ByteaHandler.class, "BYTEA", true,true,true,true,null,null), 
 
 	streamBlob(StreamBlobHandler.class, "BLOB",false,true,true,false,null,null),
 	StreamBlob(StreamBlobHandler.class, "BLOB",false,true,true,false,null,null),
