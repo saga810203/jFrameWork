@@ -28,7 +28,7 @@ public class SetCookieHandler  extends RequestHandler {
 				String n = val.substring(0,index).trim();
 				String v = val.substring(index+1).trim();
 				String tn = cw.getMethodTempVarName();
-				cw.bL("javax.servlet.http.Cookie ").w(tn).w(" =  new javax.servlet.http.Cookie(\"").w(n).w("\",").ws(v).el(");");
+				cw.bL("javax.servlet.http.Cookie ").w(tn).w(" =  new javax.servlet.http.Cookie(\"").w(n).w("\",").w(v).el(");");
 				if(ss.httpOnly()){
 					cw.bL(tn).el(".setHttpOnly(true);");
 				}

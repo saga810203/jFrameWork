@@ -88,6 +88,9 @@ public class JfwBaseException extends Exception {
 		reasons.put(302, "upload file type unsupported with setting");
 		reasons.put(303, "upload file count is larger than setting");
 		
+		reasons.put(10011, "send mail error");
+		reasons.put(10012, "send mobile phone message error");
+		
 	}
 
 }

@@ -14,6 +14,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import javax.sql.DataSource;
 
 import org.jfw.util.ConstData;
+import org.jfw.util.StringUtil;
 import org.jfw.util.bean.BeanFactory;
 import org.jfw.util.io.MultiInputStreamHandler;
 import org.jfw.util.io.ResourceUtil;
@@ -47,7 +48,17 @@ public final class JfwAppContext {
 		return cache.put(key, value);
 	}
 	public static boolean cacheObjectIfAbsent(Object key,Object value){
-		return value != cache.putIfAbsent(key, value);
+		return null == cache.putIfAbsent(key, value);
+	}
+	
+	public static String cacheObjectAndGenKey(Object value){
+		String key = StringUtil.buildUUID();
+		while(true){
+			if(null == cache.putIfAbsent(key, value)){
+				return key;
+			}
+			key = StringUtil.buildUUID();
+		}
 	}
 	
 	public static void addDestoryed(Runnable runnable) {

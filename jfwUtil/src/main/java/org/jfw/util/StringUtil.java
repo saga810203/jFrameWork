@@ -6,6 +6,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -78,6 +80,22 @@ public final class StringUtil {
 
 	public static String buildUUID() {
 		return UUID.randomUUID().toString().replaceAll("-", "").toUpperCase(Locale.US);
+	}
+	public static String md5(String str) {
+		byte[] bytes = str.getBytes();
+		MessageDigest md5 = null;
+		try {
+			md5 = MessageDigest.getInstance("MD5");
+		} catch (NoSuchAlgorithmException e) {
+			throw new RuntimeException("jdk unsupported md5???????????",e);
+		}
+        md5.update(bytes);
+        byte [] tmp = md5.digest();
+        StringBuilder sb = new StringBuilder();
+        for (byte b:tmp) {
+            sb.append(Integer.toHexString(b&0xff));
+        }
+      return sb.toString().toUpperCase(Locale.US);		
 	}
 
 }

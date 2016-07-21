@@ -52,7 +52,7 @@ public final class ParamColumn {
 						columnNames.add(nr);
 						CalcColumn c = entry.getCalcColumnByJavaName(nr);
 						ParamColumn pc = new ParamColumn();
-						pc.name =nr;
+						pc.name =c.getSqlName();
 						pc.handlerClass = c.getHandlerClass();
 						result.add(pc);
 					}
