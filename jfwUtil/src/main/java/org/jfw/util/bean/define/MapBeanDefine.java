@@ -42,10 +42,11 @@ public class MapBeanDefine extends BeanDefine {
 	}
 
 	private void addElement(String eleName, ValueDefine vd) throws ConfigException {
-		if (this.keyElement)
+		if (this.keyElement) {
 			this.addKeyElement(eleName, vd);
-		this.addValueElement(eleName, vd);
-
+		} else {
+			this.addValueElement(eleName, vd);
+		}
 	}
 
 	private void addKeyElement(String eleName, ValueDefine vd) throws ConfigException {
@@ -110,7 +111,7 @@ public class MapBeanDefine extends BeanDefine {
 		if (this.refEle && (!bf.contains(attrVal))) {
 			throw new ConfigException("not found ref bean[" + attrVal + "]");
 		}
-		
+
 		Class<?> vClazz = null;
 
 		if (this.valueClassName != null && this.valueClassName.trim().length() > 0) {
@@ -137,7 +138,7 @@ public class MapBeanDefine extends BeanDefine {
 		for (Map.Entry<String, ValueDefine> entry : this.keyEles.entrySet()) {
 			ValueDefine vd = this.valueEles.get(entry.getKey());
 			if (vd != null)
-			builder.eles.put(entry.getValue(), vd);
+				builder.eles.put(entry.getValue(), vd);
 		}
 		return builder;
 	}
@@ -155,9 +156,10 @@ public class MapBeanDefine extends BeanDefine {
 			} catch (Exception e) {
 				throw new RuntimeException("crate class[" + clazz.getName() + "] instance error", e);
 			}
-			
+
 			return result;
 		}
+
 		@Override
 		public void config(Object obj, BeanFactory bf) {
 			for (Map.Entry<ValueDefine, ValueDefine> entry : this.eles.entrySet()) {
@@ -167,7 +169,7 @@ public class MapBeanDefine extends BeanDefine {
 					throw new RuntimeException("invoke method[" + clazz.getName() + ".put(Object obj,Object)]", e);
 				}
 			}
-			
+
 		}
 
 	}

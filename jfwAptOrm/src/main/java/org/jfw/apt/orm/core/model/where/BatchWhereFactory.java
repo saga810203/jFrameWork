@@ -15,11 +15,11 @@ import org.jfw.apt.orm.core.ColumnHandler;
 import org.jfw.apt.orm.core.ColumnHandlerFactory;
 import org.jfw.apt.orm.core.model.DataEntry;
 import org.jfw.apt.orm.core.model.ParamColumn;
+import org.jfw.apt.orm.core.model.ParamSqlColumn;
 
 public final class BatchWhereFactory {
 
-	public static boolean build(MethodParamEntry mpe, DataEntry entry, LinkedList<WhereColumn> result, WherePart part)
-			throws AptException {
+	public static boolean build(MethodParamEntry mpe, DataEntry entry, LinkedList<WhereColumn> result, WherePart part) throws AptException {
 		boolean ret = false;
 		VariableElement ref = mpe.getRef();
 		List<ParamColumn> pcs = null;
@@ -27,6 +27,35 @@ public final class BatchWhereFactory {
 		boolean batchable = (null != ref.getAnnotation(Batch.class));
 		if (batchable)
 			part.setBatch(true);
+		for (ParamSqlColumn psc : ParamSqlColumn.build(mpe, entry)) {
+			ret = true;
+			handlerClass = psc.getHandlerClass();
+			String tn = mpe.getTypeName();
+			if (batchable) {
+				if (!tn.endsWith("[]")) {
+					throw new AptException(ref, "param type must is Array");
+				}
+				tn = tn.substring(0, tn.length() - 2);
+			}
+			String sn = ColumnHandlerFactory.get(handlerClass).supportsClass();
+
+			if (!tn.equals(sn)) {
+				if (batchable)
+					throw new AptException(ref, "param Type unEquals ColumnHandler.supportClass with Array");
+				else
+					throw new AptException(ref, "param Type unEquals ColumnHandler.supportClass");
+			}
+
+			WhereColumn wc = new WhereColumn();
+			wc.setHandlerClass(handlerClass);
+			wc.setName(mpe.getName() + (batchable ? "[i]" : ""));
+			wc.setNullable(false);
+			wc.setWhereSql(psc.getSql());
+			wc.setCacheValue(false);
+			result.addLast(wc);
+
+		}
+
 		for (Class<? extends Annotation> cls : WhereFactory.supportedClass) {
 			Annotation anObj = mpe.getRef().getAnnotation(cls);
 			if (anObj == null)
@@ -65,37 +94,36 @@ public final class BatchWhereFactory {
 
 	}
 
-	public static void buildWithEq(MethodParamEntry mpe, DataEntry entry, LinkedList<WhereColumn> result,
-			WherePart part) throws AptException {
+	public static void buildWithEq(MethodParamEntry mpe, DataEntry entry, LinkedList<WhereColumn> result, WherePart part) throws AptException {
 		VariableElement ref = mpe.getRef();
 		boolean batchable = (null != ref.getAnnotation(Batch.class));
 		if (batchable)
 			part.setBatch(true);
-		List<ParamColumn> pcs =ParamColumn.build(mpe, entry);
-		for(ParamColumn pc:pcs){
-		Class<? extends ColumnHandler> handlerClass =pc.getHandlerClass();
-		String tn = mpe.getTypeName();
-		if (batchable) {
-			if (!tn.endsWith("[]")) {
-				throw new AptException(ref, "param type must is Array");
+		List<ParamColumn> pcs = ParamColumn.build(mpe, entry);
+		for (ParamColumn pc : pcs) {
+			Class<? extends ColumnHandler> handlerClass = pc.getHandlerClass();
+			String tn = mpe.getTypeName();
+			if (batchable) {
+				if (!tn.endsWith("[]")) {
+					throw new AptException(ref, "param type must is Array");
+				}
+				tn = tn.substring(0, tn.length() - 2);
 			}
-			tn = tn.substring(0, tn.length() - 2);
-		}
 
-		String sn = ColumnHandlerFactory.get(handlerClass).supportsClass();
-		if (!tn.equals(sn)) {
-			if (batchable)
-				throw new AptException(ref, "param Type unEquals ColumnHandler.supportClass with Array");
-			else
-				throw new AptException(ref, "param Type unEquals ColumnHandler.supportClass");
-		}
-		WhereColumn wc = new WhereColumn();
-		wc.setHandlerClass(handlerClass);
-		wc.setName(mpe.getName() + (batchable ? "[i]" : ""));
-		wc.setNullable(false);
-		wc.setWhereSql(pc.getName() + "= ?");
-		wc.setCacheValue(batchable);
-		result.addLast(wc);
+			String sn = ColumnHandlerFactory.get(handlerClass).supportsClass();
+			if (!tn.equals(sn)) {
+				if (batchable)
+					throw new AptException(ref, "param Type unEquals ColumnHandler.supportClass with Array");
+				else
+					throw new AptException(ref, "param Type unEquals ColumnHandler.supportClass");
+			}
+			WhereColumn wc = new WhereColumn();
+			wc.setHandlerClass(handlerClass);
+			wc.setName(mpe.getName() + (batchable ? "[i]" : ""));
+			wc.setNullable(false);
+			wc.setWhereSql(pc.getName() + "= ?");
+			wc.setCacheValue(batchable);
+			result.addLast(wc);
 		}
 
 	}

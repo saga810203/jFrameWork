@@ -82,7 +82,7 @@ public final class StringUtil {
 		return UUID.randomUUID().toString().replaceAll("-", "").toUpperCase(Locale.US);
 	}
 	public static String md5(String str) {
-		byte[] bytes = str.getBytes();
+		byte[] bytes = str.getBytes(ConstData.UTF8);
 		MessageDigest md5 = null;
 		try {
 			md5 = MessageDigest.getInstance("MD5");
@@ -93,7 +93,7 @@ public final class StringUtil {
         byte [] tmp = md5.digest();
         StringBuilder sb = new StringBuilder();
         for (byte b:tmp) {
-            sb.append(Integer.toHexString(b&0xff));
+            sb.append(Integer.toHexString((b & 0x000000FF) | 0xFFFFFF00).substring(6));
         }
       return sb.toString().toUpperCase(Locale.US);		
 	}

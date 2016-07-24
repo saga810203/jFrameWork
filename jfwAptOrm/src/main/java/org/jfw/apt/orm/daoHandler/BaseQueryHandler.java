@@ -26,9 +26,9 @@ public abstract class BaseQueryHandler extends BaseDaoHandler {
 
 	public static final String SECOND_PAGE_SIZE_NAME = "pageSize";
 	public static final String SECOND_PAGE_NO_NAME = "pageNo";
-	
-	public static final String FIRST_LIMIT_NAME="_rows";
-	public static final String SECOND_LIMIT_NAME ="rows";
+
+	public static final String FIRST_LIMIT_NAME = "_rows";
+	public static final String SECOND_LIMIT_NAME = "rows";
 
 	protected boolean dynamic = false;
 
@@ -50,8 +50,7 @@ public abstract class BaseQueryHandler extends BaseDaoHandler {
 		DataEntry result = null;
 		String f = this.getFromClassName();
 
-		result = DataEntryFactory.get(f == null ? javaName : f,
-				DataEntry.TABLE | DataEntry.EXTEND_TABLE | DataEntry.VIEW | DataEntry.EXTEND_VIEW);
+		result = DataEntryFactory.get(f == null ? javaName : f, DataEntry.TABLE | DataEntry.EXTEND_TABLE | DataEntry.VIEW | DataEntry.EXTEND_VIEW);
 
 		if (null == result)
 			throw new AptException(this.ref, "not found from DataEntry");
@@ -118,7 +117,17 @@ public abstract class BaseQueryHandler extends BaseDaoHandler {
 
 		this.fromSentence = this.fromDataEntry.getFromSentence();
 
-		this.fields.addAll(this.selectDataEntry.getAllColumn());
+		if (selectDataEntry == fromDataEntry) {
+			this.fields.addAll(this.selectDataEntry.getAllColumn());
+		} else {
+			for (CalcColumn col : this.selectDataEntry.getAllColumn()) {
+				String jn = col.getJavaName();
+				CalcColumn c = this.fromDataEntry.getCalcColumnByJavaName(col.getJavaName());
+				if (c == null)
+					throw new AptException(this.ref, "select field[" + jn + "] not in from sentence");
+				this.fields.add(c);
+			}
+		}
 		for (ListIterator<CalcColumn> it = this.fields.listIterator(); it.hasNext();) {
 			if (!it.next().isQueryable())
 				it.remove();
@@ -126,7 +135,7 @@ public abstract class BaseQueryHandler extends BaseDaoHandler {
 	}
 
 	protected void buildWhere() throws AptException {
-		this.wherePart = WhereFactory.build(this.me, this.fromDataEntry,false,null);
+		this.wherePart = WhereFactory.build(this.me, this.fromDataEntry, false, null);
 		this.dynamic = (null != this.wherePart) && this.wherePart.isDynamic();
 	}
 
