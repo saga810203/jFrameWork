@@ -81,21 +81,46 @@ public final class StringUtil {
 	public static String buildUUID() {
 		return UUID.randomUUID().toString().replaceAll("-", "").toUpperCase(Locale.US);
 	}
+
 	public static String md5(String str) {
 		byte[] bytes = str.getBytes(ConstData.UTF8);
 		MessageDigest md5 = null;
 		try {
 			md5 = MessageDigest.getInstance("MD5");
 		} catch (NoSuchAlgorithmException e) {
-			throw new RuntimeException("jdk unsupported md5???????????",e);
+			throw new RuntimeException("jdk unsupported md5???????????", e);
 		}
-        md5.update(bytes);
-        byte [] tmp = md5.digest();
-        StringBuilder sb = new StringBuilder();
-        for (byte b:tmp) {
-            sb.append(Integer.toHexString((b & 0x000000FF) | 0xFFFFFF00).substring(6));
-        }
-      return sb.toString().toUpperCase(Locale.US);		
+		md5.update(bytes);
+		byte[] tmp = md5.digest();
+		StringBuilder sb = new StringBuilder();
+		for (byte b : tmp) {
+			sb.append(digits[(b & 0xf0) >> 4]);
+			sb.append(digits[b & 0xf]);
+		}
+		return sb.toString();
+	}
+
+	public static String toHexString(byte b) {
+		char[] cs = new char[2];
+		cs[1] = digits[b & 0xf];
+		cs[0] = digits[(b & 0xf0) >> 4];
+		return new String(cs);
+	}
+
+	public static String toHexString(int i) {
+		char[] cs = new char[4];
+		cs[3] = digits[i & 0xf];
+		cs[2] = digits[(i & 0xf0) >> 4];
+		cs[1] = digits[(i & 0xf00) >> 8];
+		cs[0] = digits[(i & 0xf000) >> 12];
+		return new String(cs);
+	}
+
+	final static char[] digits = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F' };
+
+	public static void main(String[] args) {
+		System.out.println(toHexString(0x1fff));
+
 	}
 
 }
