@@ -86,10 +86,8 @@ public abstract class BasePageQueryHandler extends BaseQueryHandler {
 				cw.bL("sql = \" ");
 				this.wherePart.WriteStaticTo(cw);
 				cw.l("\";");
-				cw.bL("String ").w(this.whereSqlName).w(" = sql;");
-
+				cw.bL("String ").w(this.whereSqlName).el(" = sql;");
 			}
-
 		}
 
 		if (this.dynamic) {
@@ -100,8 +98,9 @@ public abstract class BasePageQueryHandler extends BaseQueryHandler {
 		}
 
 		cw.ws(this.getSelectFieldWithRecordCount()).w(" FROM ").ws(this.fromSentence);
-		cw.el("\");");
+	
 		if (this.dynamic) {
+			cw.el("\");");
 			if (this.wherePart.hasStaticPart()) {
 				cw.bL("sql.append(").w(this.whereSqlName).el(");");
 			} else {
@@ -109,6 +108,7 @@ public abstract class BasePageQueryHandler extends BaseQueryHandler {
 						.l("}");
 			}
 		} else {
+			cw.el("\";");
 			if (null != this.wherePart) {
 				cw.bL("sql = sql + ").w(this.whereSqlName).el(";");
 			}
