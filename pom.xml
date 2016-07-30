@@ -27,5 +27,6 @@
 		<module>jfwDemo-orm</module>
 		<module>jfwDemo-service</module>
 		<module>jfwDemo-web</module>
+		<module>mavenDebugTools</module>
 	</modules>
 </project>
