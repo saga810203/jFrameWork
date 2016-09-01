@@ -96,6 +96,24 @@ public final class JfwAppContext {
 		scheduledExecutorService = bf.getBean("scheduledExecutorService", ScheduledExecutorService.class);
 		actived= true;
 	}
+	
+	public static void init(String[] filenames) throws Exception{
+		try{
+			BeanFactory bf = buildBeanFactory(filenames);
+			init(bf);
+		}catch(Exception e){
+			destory();
+			throw e;
+		}
+	}
+	
+	public static BeanFactory buildBeanFactory(String[] filenames) throws Exception{
+		Map<String,String> config = new HashMap<String, String>();
+		for (int i = 0; i < filenames.length; ++i) {
+			config.putAll(JfwAppContext.readConfig(filenames[i]));
+		}
+		return BeanFactory.build(null, config);	
+	}
 
 	synchronized public static void destory() {
 		try {
