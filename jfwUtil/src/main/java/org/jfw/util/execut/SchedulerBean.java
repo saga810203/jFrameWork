@@ -5,6 +5,7 @@ import java.lang.reflect.Method;
 public class SchedulerBean {
 
 	private Object bean;
+	
 	private String jobMethodName;
 	private String interruptMethodName;
 	
