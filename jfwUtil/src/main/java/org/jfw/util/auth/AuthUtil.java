@@ -139,6 +139,12 @@ public final class AuthUtil {
 		if(authStr==null || authStr.length()==0) return new int[]{0};
 		return conver(Base64.decodeBase64(authStr));
 	}
+	public static String grant(String authStr,int auth){
+		return serialAuth(grant(deSerialAuth(authStr),auth));
+	}
+	public static String revoke(String authStr,int auth){
+		return serialAuth(revoke(deSerialAuth(authStr),auth));		
+	}
 	
 	public static void main(String main[]) {
 		System.out.println(System.currentTimeMillis());
