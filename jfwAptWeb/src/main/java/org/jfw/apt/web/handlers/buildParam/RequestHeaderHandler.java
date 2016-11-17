@@ -23,17 +23,20 @@ public final class RequestHeaderHandler  implements BuildParameter {
 		String pn =Util.emptyToNull(header.value());
 		String dv = Util.emptyToNull(header.defaultValue());
 		sb.bL("String ").w(mpe.getName()).w(" = req.getHeader(\"").w(null == pn?mpe.getName():pn).el("\");");
-		sb.bL("if(null == ").w(mpe.getName()).el("){");
+		
 		if(dv==null){
-			if(null == mpe.getRef().getAnnotation(Nullable.class)){
-				sb.bL(mpe.getName()).el("= null;");
-			}else{
-				sb.l("throw new IllegalArgumentException(\"not found parameter in header:" + (null == pn?mpe.getName():pn) + "\");");
+			if(!mpe.isNullable()){
+				sb.bL("if(null == ").w(mpe.getName()).el("){");
+				sb.l("throw new JfwInvalidParamException(\""+aptWebHandler.getMethodUrl()+" header domain\",\"" + (null == pn?mpe.getName():pn) + "\");");
+				//sb.l("throw new IllegalArgumentException(\"not found parameter in header:" + (null == pn?mpe.getName():pn) + "\");");
+				sb.l("}");
 			}
 		}else{
+			sb.bL("if(null == ").w(mpe.getName()).el("){");
 			sb.bL(mpe.getName()).w(" = ").w(dv).el(";");
+			sb.l("}");
 		}
-		sb.l("}");
+		
 	}
 
 	@Override

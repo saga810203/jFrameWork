@@ -2,9 +2,10 @@ package org.jfw.apt.web.handlers.buildParam;
 
 public class BaseArrayRPT extends AbstractRequestParamTransfer {
 
-	public void transferToParams(String classType) {
+	public void transferToParams(String classType,String ln,String pn) {
 		String cn = classType;
-
+		if(this.isParse(this.mpe.getTypeName()))cw.l("try{");	
+		cw.bL(ln).w("[i]=");
 		if (cn.equals("int[]")) {
 			cw.w("Integer.parseInt(params[i])");
 		} else if (cn.equals("java.lang.Integer[]")) {
@@ -40,6 +41,24 @@ public class BaseArrayRPT extends AbstractRequestParamTransfer {
 		} else {
 			throw new IllegalArgumentException("not supperted class type:" + cn);
 		}
+		cw.el(";");
+		if(this.isParse(this.mpe.getName())){
+			cw.l("}catch(Exception pee){");
+			this.raiseNoFoundError(pn, "pee");
+			cw.l("}");
+		}
+		
+	}
+
+	private boolean isParse(String cn){
+		if(cn.equals("java.lang.String[]")){
+			return false;
+		}else if(cn.equals("java.lang.Boolean[]")){
+			return false;
+		}else if(cn.equals("boolean")){
+			return false;
+		}
+		return true;
 	}
 
 	@Override
@@ -53,10 +72,8 @@ public class BaseArrayRPT extends AbstractRequestParamTransfer {
 			cw.l("}");
 			cw.bL(vTypeName).w(" ").w(this.mpe.getName()).w(" = new ").w(vTypeName.substring(0, vTypeName.length() - 2))
 					.el("params.length];");
-			cw.l("for( int i = 0 ; i < params.length ; ++i){");
-			cw.bL(this.mpe.getName()).w("[i]=");
-			this.transferToParams(this.mpe.getTypeName());
-			cw.el(";");
+			cw.l("for( int i = 0 ; i < params.length ; ++i){");			
+			this.transferToParams(this.mpe.getTypeName(),mpe.getName(),this.annotation.getParamNameInRequest());			
 			cw.l("}");
 		} else {
 			cw.bL(vTypeName).w(" ").w(this.mpe.getName()).el(";");
@@ -65,9 +82,7 @@ public class BaseArrayRPT extends AbstractRequestParamTransfer {
 			cw.bL(this.mpe.getName()).w(" = new ").w(vTypeName.substring(0, vTypeName.length() - 1))
 					.el("params.length];");
 			cw.l("for( int i = 0 ; i < params.length ; ++i){");
-			cw.bL(this.mpe.getName()).w("[i]=");
-			this.transferToParams(this.mpe.getTypeName());
-			cw.el(";");
+			this.transferToParams(this.mpe.getTypeName(),this.mpe.getName(), this.annotation.getParamNameInRequest());
 			cw.l("}");
 			cw.l("}else{");
 			cw.bL(this.mpe.getName()).w(" = ").w(this.annotation.getDefaultValue()).el(";");
@@ -88,18 +103,15 @@ public class BaseArrayRPT extends AbstractRequestParamTransfer {
 			this.raiseNoFoundError(this.frp.getParamName().trim());
 			cw.l("}");
 			cw.bL(vTypeName).w("[] ").w(localName).w(" = new ").w(vTypeName).el("[params.length];");
-			cw.l("for( int i = 0 ; i < params.length ; ++i){")
-			   .w(localName).w("[i]=");
-			this.transferToParams(ATypeName);
-			cw.el(";").l("}");
+			cw.l("for( int i = 0 ; i < params.length ; ++i){");
+			this.transferToParams(vTypeName, localName, this.frp.getParamName().trim());
+			cw.l("}");
 			cw.writeSetter(this.mpe.getName(), this.frp.getValue(), localName);
 		} else {
 			cw.l("if(null!=params && params.length!=0){");
 			cw.bL(vTypeName).w("[] ").w(localName).w(" = new ").w(vTypeName).el("[params.length];");
-			cw.l("for( int i = 0 ; i < params.length ; ++i){")
-			.bL(localName).w("[i]=");
-			this.transferToParams(ATypeName);
-			cw.el(";");
+			cw.l("for( int i = 0 ; i < params.length ; ++i){");
+			this.transferToParams(vTypeName, localName, this.frp.getParamName().trim());
 			cw.l("}");
 			cw.writeSetter(this.mpe.getName(), this.frp.getValue(), localName);
 			String dv = this.frp.getDefaultValue();

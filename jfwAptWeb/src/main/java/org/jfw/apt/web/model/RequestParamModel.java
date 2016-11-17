@@ -6,8 +6,6 @@ import java.util.List;
 import javax.lang.model.type.MirroredTypeException;
 
 import org.jfw.apt.Util;
-import org.jfw.apt.annotation.DefaultValue;
-import org.jfw.apt.annotation.Nullable;
 import org.jfw.apt.model.MethodParamEntry;
 import org.jfw.apt.model.TypeName;
 import org.jfw.apt.web.annotation.param.RequestParam;
@@ -90,10 +88,9 @@ public class RequestParamModel {
 	public static RequestParamModel build(RequestParam rp, String methodVariableName, MethodParamEntry mpe) {
 		RequestParamModel result = new RequestParamModel();
 		result.paramName = "";
-		DefaultValue defaultValue = mpe.getRef().getAnnotation(DefaultValue.class);		
-		result.defaultValue = defaultValue==null?null:Util.emptyToNull(defaultValue.value());
+		result.defaultValue = mpe.getDefaultValue();
 
-		if((result.defaultValue==null) &&(!Util.isPrimitive(mpe.getTypeName())) && (null != mpe.getRef().getAnnotation(Nullable.class)))
+		if((result.defaultValue==null) &&(!mpe.isPrimitive()) && mpe.isNullable())
 			result.defaultValue = "null";
 		result.required = null == result.defaultValue;
 		

@@ -26,7 +26,7 @@ public class FixedValueDefine extends ValueDefine{
 		} else if(this.clazz.equals(Float.class)||this.clazz.equals(float.class)){
 			this.value = Float.valueOf(val.trim());
 		} else if(this.clazz.equals(Double.class)||this.clazz.equals(double.class)){
-			this.value = Double.class;
+			this.value = Double.parseDouble(val.trim());
 		} else if(this.clazz.equals(Boolean.class)||this.clazz.equals(boolean.class)){
 			this.value = Boolean.valueOf(val.trim());
 		} else if(this.clazz.equals(Character.class)||this.clazz.equals(char.class)){

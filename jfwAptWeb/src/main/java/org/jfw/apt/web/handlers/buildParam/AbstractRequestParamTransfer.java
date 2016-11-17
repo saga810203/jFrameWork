@@ -23,8 +23,12 @@ public abstract class AbstractRequestParamTransfer implements RequestParamTransf
 	}
 
 	public void raiseNoFoundError(String paramName) {
-		this.cw.l("throw new IllegalArgumentException(\"not found parameter:" + paramName + "\");");
+		this.cw.l("throw new JfwInvalidParamException(\""+this.aptWebHandler.getMethodUrl()+"\",\"" + paramName + "\");");
 	}
+	public void raiseNoFoundError(String paramName,String exParam) {
+		this.cw.l("throw new JfwInvalidParamException(\""+this.aptWebHandler.getMethodUrl()+"\",\"" + paramName + "\","+exParam+");");
+	}
+	
 
 	@Override
 	public void transfer(ClassWriter cw,MethodParamEntry mpe,AptWebHandler aptWebHandler,

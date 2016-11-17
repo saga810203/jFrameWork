@@ -44,6 +44,16 @@ public class BaseTypeRPT extends AbstractRequestParamTransfer {
 
 	}
 
+	private boolean isParse(String cn){
+		if(cn.equals("java.lang.String[]")){
+			return false;
+		}else if(cn.equals("java.lang.Boolean[]")){
+			return false;
+		}else if(cn.equals("boolean")){
+			return false;
+		}
+		return true;
+	}
 	@Override
 	public void bulidParam() {
 		String paramName = this.annotation.getParamNameInRequest();
@@ -52,15 +62,28 @@ public class BaseTypeRPT extends AbstractRequestParamTransfer {
 			this.cw.l("if(null==param || param.length()==0){");
 			this.raiseNoFoundError(paramName);
 			cw.l("}");
+			if(this.isParse(this.mpe.getTypeName()))cw.l("try{");
+			
 			cw.bL(this.mpe.getTypeName()).w(" ").w(this.mpe.getName()).w(" = ");
 			this.transferToParam(this.mpe.getTypeName());
 			cw.el(";");
+			if(this.isParse(this.mpe.getTypeName())){
+				cw.l("}catch(Exception pee){");
+				this.raiseNoFoundError(paramName, "pee");
+				cw.l("}");
+			}
 		} else {
 			cw.bL(this.mpe.getTypeName()).w(" ").w(this.mpe.getName()).w(" = ").ws(this.annotation.getDefaultValue()).el(";");
 			cw.l("if(null!=param && param.length()!=0){");
+			if(this.isParse(this.mpe.getTypeName()))cw.l("try{");
 			cw.bL(this.mpe.getName()).w(" = ");
 			this.transferToParam(this.mpe.getTypeName());
 			cw.l(";");
+			if(this.isParse(this.mpe.getTypeName())){
+				cw.l("}catch(Exception pee){");
+				this.raiseNoFoundError(paramName, "pee");
+				cw.l("}");
+			}
 			cw.l("}");
 		}
 	}
@@ -73,14 +96,26 @@ public class BaseTypeRPT extends AbstractRequestParamTransfer {
 			this.cw.l("if(null==param || param.length()==0){");
 			this.raiseNoFoundError(this.frp.getParamName().trim());
 			cw.l("}");
+			if(this.isParse(this.mpe.getTypeName()))cw.l("try{");
 			cw.bL(this.mpe.getName()).w(".").w(Util.buildSetter(this.frp.getValue())).w("(");;
 			this.transferToParam(this.frp.getValueClassName());
 			cw.el(");");
+			if(this.isParse(this.mpe.getTypeName())){
+				cw.l("}catch(Exception pee){");
+				this.raiseNoFoundError(this.frp.getParamName().trim(), "pee");
+				cw.l("}");
+			}
 		} else {
 			cw.l("if(null!=param && param.length()!=0){");
+			if(this.isParse(this.mpe.getTypeName()))cw.l("try{");
 			cw.bL(this.mpe.getName()).w(".").w(Util.buildSetter(this.frp.getValue())).w("(");;
 			this.transferToParam(this.frp.getValueClassName());
 			cw.el(");");
+			if(this.isParse(this.mpe.getTypeName())){
+				cw.l("}catch(Exception pee){");
+				this.raiseNoFoundError(this.frp.getParamName().trim(), "pee");
+				cw.l("}");
+			}
 			String dv = this.frp.getDefaultValue();
 			if(dv!=null){
 				cw.l("}else{");

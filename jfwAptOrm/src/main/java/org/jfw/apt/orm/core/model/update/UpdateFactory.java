@@ -153,7 +153,7 @@ public final class UpdateFactory {
 					withDynamic = true;
 				}
 			}
-			if ((!col.isNullable()) && (null != mpe.getRef().getAnnotation(Nullable.class))) {
+			if ((!col.isNullable()) && (mpe.isNullable())) {
 				withDynamic = true;
 			}
 

@@ -8,8 +8,6 @@ import java.lang.annotation.Target;
 @Target(ElementType.PARAMETER)
 @Retention(RetentionPolicy.SOURCE)
 public @interface SessionVal {
-	String value();
+	String value() default "";
 	boolean remove() default false;
-	String defaultvalue() default "";
-//	Class<? extends BuildParameter> buildParamClass() default SessionValHandler.class;
 }

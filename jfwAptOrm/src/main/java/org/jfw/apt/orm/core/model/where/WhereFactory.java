@@ -45,7 +45,7 @@ public final class WhereFactory {
 		VariableElement ref = mpe.getRef();
 		List<ParamColumn> paramColumns = null;
 		Class<? extends ColumnHandler> handlerClass = null;
-		boolean nullable = Util.isPrimitive(mpe.getTypeName()) ? false : (null != ref.getAnnotation(Nullable.class));
+		boolean nullable =mpe.isPrimitive()? false : mpe.isNullable() ;// (null != ref.getAnnotation(Nullable.class));
 		for(ParamSqlColumn psc: ParamSqlColumn.build(mpe, entry)){
 			ret = true;
 			handlerClass = psc.getHandlerClass();
@@ -117,7 +117,7 @@ public final class WhereFactory {
 	public static void buildWithEq(MethodParamEntry mpe, DataEntry entry, LinkedList<WhereColumn> result)
 			throws AptException {
 		VariableElement ref = mpe.getRef();
-		boolean nullable = Util.isPrimitive(mpe.getTypeName()) ? false : (null != ref.getAnnotation(Nullable.class));
+		boolean nullable =mpe.isPrimitive()? false : mpe.isNullable();
 		List<ParamColumn> pcs = ParamColumn.build(mpe, entry);
 		for (ParamColumn pc : pcs) {
 

@@ -103,10 +103,10 @@ public class PVarHandler implements BuildParameter {
 			throw new AptException(mpe.getRef(),"UnSupportedType on paramter with @PVar");
 		}
 		cw.l("}else{");
-		if(dv== null && (null != mpe.getRef().getAnnotation(Nullable.class))){
+		if(dv== null && mpe.isNullable()){
 			cw.bL(mpe.getName()).w("= null;");
 		}else{
-			cw.l("throw new IllegalArgumentException(\"not found parameter:" + mpe.getName() + "\");");
+			cw.l("throw new JfwInvalidParamException(\""+aptWebHandler.getMethodUrl()+"\",\"" + mpe.getName() + "\");");
 		}
 		cw.l("}");
 	}

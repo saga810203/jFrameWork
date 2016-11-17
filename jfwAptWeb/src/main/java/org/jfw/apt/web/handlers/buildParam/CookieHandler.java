@@ -27,6 +27,14 @@ public final class CookieHandler implements BuildParameter {
 		sb.bL(mpe.getName()).el(" = _cookie.getValue();");
 		sb.l("break;");
 		sb.l("}");
+		String dv = mpe.getDefaultValue();
+		if(dv ==null){
+			if(!mpe.isNullable()){
+				sb.bL("if(null==").w(mpe.getName()).el(") throw new JfwInvalidParamException(\""+aptWebHandler.getMethodUrl()+" cookie domain\",\"" + pn + "\");");	
+			}
+		}else{
+			sb.bL("if(null==").w(mpe.getName()).w(") "+mpe.getName()+"  = ").w(dv).el(";");
+		}		
 	}
 
 	@Override

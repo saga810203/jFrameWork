@@ -2,6 +2,9 @@ package org.jfw.apt.model;
 
 import javax.lang.model.element.VariableElement;
 
+import org.jfw.apt.Util;
+import org.jfw.apt.annotation.DefaultValue;
+import org.jfw.apt.annotation.Nullable;
 import org.jfw.apt.exception.AptException;
 
 public class MethodParamEntry {
@@ -35,6 +38,17 @@ public class MethodParamEntry {
 
 	public VariableElement getRef() {
 		return ref;
+	}
+	
+	public String getDefaultValue(){
+		DefaultValue defaultValue = this.ref.getAnnotation(DefaultValue.class);		
+		return defaultValue==null?null:Util.emptyToNull(defaultValue.value());		
+	}
+	public boolean isNullable(){
+		return null != this.ref.getAnnotation(Nullable.class);
+	}
+	public boolean isPrimitive(){
+		return Util.isPrimitive(this.typeName);
 	}
 
 }
