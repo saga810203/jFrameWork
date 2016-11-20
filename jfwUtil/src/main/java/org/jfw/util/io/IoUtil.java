@@ -36,6 +36,7 @@ public class IoUtil {
 				if (len > 0)
 					out.write(buf, 0, len);
 			}
+			out.flush();
 		} finally {
 			try {
 				if (closeIn)
