@@ -12,7 +12,6 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.VariableElement;
 
 import org.jfw.apt.Util;
-import org.jfw.apt.annotation.Nullable;
 import org.jfw.apt.exception.AptException;
 import org.jfw.apt.model.MethodEntry;
 import org.jfw.apt.model.MethodParamEntry;

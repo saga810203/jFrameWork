@@ -13,7 +13,6 @@ import org.jfw.apt.model.MethodEntry;
 import org.jfw.apt.model.MethodParamEntry;
 import org.jfw.apt.orm.OrmAnnoCheckUtil;
 import org.jfw.apt.orm.annotation.dao.Dynamic;
-import org.jfw.apt.annotation.Nullable;
 import org.jfw.apt.orm.annotation.dao.method.IncludeFixSet;
 import org.jfw.apt.orm.annotation.dao.method.SetSentence;
 import org.jfw.apt.orm.annotation.dao.param.Alias;

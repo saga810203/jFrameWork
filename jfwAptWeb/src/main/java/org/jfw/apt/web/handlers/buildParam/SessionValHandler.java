@@ -3,7 +3,6 @@ package org.jfw.apt.web.handlers.buildParam;
 import javax.lang.model.element.VariableElement;
 
 import org.jfw.apt.Util;
-import org.jfw.apt.annotation.Nullable;
 import org.jfw.apt.exception.AptException;
 import org.jfw.apt.model.MethodParamEntry;
 import org.jfw.apt.out.ClassWriter;
