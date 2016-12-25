@@ -45,9 +45,9 @@ public class BaseTypeRPT extends AbstractRequestParamTransfer {
 	}
 
 	private boolean isParse(String cn){
-		if(cn.equals("java.lang.String[]")){
+		if(cn.equals("java.lang.String")){
 			return false;
-		}else if(cn.equals("java.lang.Boolean[]")){
+		}else if(cn.equals("java.lang.Boolean")){
 			return false;
 		}else if(cn.equals("boolean")){
 			return false;
@@ -62,9 +62,10 @@ public class BaseTypeRPT extends AbstractRequestParamTransfer {
 			this.cw.l("if(null==param || param.length()==0){");
 			this.raiseNoFoundError(paramName);
 			cw.l("}");
+			cw.bL(this.mpe.getTypeName()).w(" ").w(this.mpe.getName()).w(";");
 			if(this.isParse(this.mpe.getTypeName()))cw.l("try{");
 			
-			cw.bL(this.mpe.getTypeName()).w(" ").w(this.mpe.getName()).w(" = ");
+			cw.bL(this.mpe.getName()).w(" = ");
 			this.transferToParam(this.mpe.getTypeName());
 			cw.el(";");
 			if(this.isParse(this.mpe.getTypeName())){

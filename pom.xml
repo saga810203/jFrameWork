@@ -3,8 +3,12 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.jfw</groupId>
 	<artifactId>jFrameWork</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.2-SNAPSHOT</version>
 	<packaging>pom</packaging>
+	<properties>
+		<maven.compiler.debug>true</maven.compiler.debug>
+		<maven.compiler.debugLevel>vars,lines,source</maven.compiler.debugLevel>
+	</properties>
 	<build>
 		<plugins>
 			<plugin>

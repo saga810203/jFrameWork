@@ -32,8 +32,11 @@ public final class RequestParamHandler implements BuildParameter {
 		RequestParamModel rpm = RequestParamModel.build(this.requestParam, mpe.getName(), mpe);
 		RequestParamTransfer rpt = null;
 		Class<RequestParamTransfer> cls = null;
+		
 		try {
 			cls = TransferFactory.getRequestParamTransfer(mpe.getTypeName());
+			
+			
 			if (cls != null) {
 				rpt = cls.newInstance();
 			}

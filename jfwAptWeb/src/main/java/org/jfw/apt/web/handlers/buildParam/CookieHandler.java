@@ -30,7 +30,7 @@ public final class CookieHandler implements BuildParameter {
 		String dv = mpe.getDefaultValue();
 		if(dv ==null){
 			if(!mpe.isNullable()){
-				sb.bL("if(null==").w(mpe.getName()).el(") throw new JfwInvalidParamException(\""+aptWebHandler.getMethodUrl()+" cookie domain\",\"" + pn + "\");");	
+				sb.bL("if(null==").w(mpe.getName()).el(") throw new org.jfw.util.exception.JfwInvalidParamException(\""+aptWebHandler.getMethodUrl()+" cookie domain\",\"" + pn + "\");");	
 			}
 		}else{
 			sb.bL("if(null==").w(mpe.getName()).w(") "+mpe.getName()+"  = ").w(dv).el(";");

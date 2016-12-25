@@ -3,7 +3,7 @@
   <parent>
     <groupId>org.jfw</groupId>
     <artifactId>jFrameWork</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.0.2-SNAPSHOT</version>
   </parent>
   <artifactId>jfwAptOrm</artifactId>
   <properties>

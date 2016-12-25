@@ -23,10 +23,10 @@ public abstract class AbstractRequestParamTransfer implements RequestParamTransf
 	}
 
 	public void raiseNoFoundError(String paramName) {
-		this.cw.l("throw new JfwInvalidParamException(\""+this.aptWebHandler.getMethodUrl()+"\",\"" + paramName + "\");");
+		this.cw.l("throw new org.jfw.util.exception.JfwInvalidParamException(\""+this.aptWebHandler.getMethodUrl()+"\",\"" + paramName + "\");");
 	}
 	public void raiseNoFoundError(String paramName,String exParam) {
-		this.cw.l("throw new JfwInvalidParamException(\""+this.aptWebHandler.getMethodUrl()+"\",\"" + paramName + "\","+exParam+");");
+		this.cw.l("throw new org.jfw.util.exception.JfwInvalidParamException(\""+this.aptWebHandler.getMethodUrl()+"\",\"" + paramName + "\","+exParam+");");
 	}
 	
 

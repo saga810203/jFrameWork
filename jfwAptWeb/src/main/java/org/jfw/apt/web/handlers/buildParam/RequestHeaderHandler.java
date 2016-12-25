@@ -26,7 +26,7 @@ public final class RequestHeaderHandler  implements BuildParameter {
 		if(dv==null){
 			if(!mpe.isNullable()){
 				sb.bL("if(null == ").w(mpe.getName()).el("){");
-				sb.l("throw new JfwInvalidParamException(\""+aptWebHandler.getMethodUrl()+" header domain\",\"" + (null == pn?mpe.getName():pn) + "\");");
+				sb.l("throw new org.jfw.util.exception.JfwInvalidParamException(\""+aptWebHandler.getMethodUrl()+" header domain\",\"" + (null == pn?mpe.getName():pn) + "\");");
 				//sb.l("throw new IllegalArgumentException(\"not found parameter in header:" + (null == pn?mpe.getName():pn) + "\");");
 				sb.l("}");
 			}

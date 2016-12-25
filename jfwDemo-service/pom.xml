@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>org.jfw</groupId>
 		<artifactId>jFrameWork</artifactId>
-		<version>0.0.1-SNAPSHOT</version>
+		<version>0.0.2-SNAPSHOT</version>
 	</parent>
 	<artifactId>jfwDemo-service</artifactId>
 	<properties>
@@ -21,11 +21,13 @@
 			<groupId>org.jfw</groupId>
 			<artifactId>jfwAptOrm</artifactId>
 			<version>${project.version}</version>
+			<optional>true</optional>
 		</dependency>
 		<dependency>
 			<groupId>org.jfw</groupId>
 			<artifactId>jfwAptWeb</artifactId>
 			<version>${project.version}</version>
+			<optional>true</optional>
 		</dependency>
 		<dependency>
 			<groupId>org.jfw</groupId>
@@ -41,6 +43,7 @@
 			<groupId>org.jfw</groupId>
 			<artifactId>jfwApt</artifactId>
 			<version>${project.version}</version>
+			<optional>true</optional>
 		</dependency>
 		<dependency>
 			<groupId>javax.servlet</groupId>

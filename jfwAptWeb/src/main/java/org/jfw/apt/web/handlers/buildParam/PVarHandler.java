@@ -105,7 +105,7 @@ public class PVarHandler implements BuildParameter {
 		if(dv== null && mpe.isNullable()){
 			cw.bL(mpe.getName()).w("= null;");
 		}else{
-			cw.l("throw new JfwInvalidParamException(\""+aptWebHandler.getMethodUrl()+"\",\"" + mpe.getName() + "\");");
+			cw.l("throw new org.jfw.util.exception.JfwInvalidParamException(\""+aptWebHandler.getMethodUrl()+"\",\"" + mpe.getName() + "\");");
 		}
 		cw.l("}");
 	}

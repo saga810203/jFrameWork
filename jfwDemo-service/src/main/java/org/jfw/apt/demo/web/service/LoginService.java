@@ -16,11 +16,12 @@ import org.jfw.apt.web.annotation.param.JdbcConn;
 import org.jfw.apt.web.annotation.param.PVar;
 import org.jfw.apt.web.annotation.param.PathVar;
 import org.jfw.util.auth.AuthUser;
+import org.jfw.util.exception.JfwInvalidParamException;
 
 @Path
 public class LoginService {
-	public static final String EMPTY="";
-	
+	public static final String EMPTY = "";
+
 	@Autowrie
 	private UserDao userDao;
 
@@ -31,46 +32,49 @@ public class LoginService {
 	public void setUserDao(UserDao userDao) {
 		this.userDao = userDao;
 	}
-	
+
 	@Post
 	@Path("/login")
-	public AuthUser login(@JdbcConn(false) Connection con,String ln,String pw){
+	public AuthUser login(@JdbcConn(false) Connection con, String ln, String pw) throws JfwInvalidParamException {
 		LoginUser user = new LoginUser();
 		user.setId("1234567687");
 		user.setName("DEFAULT");
 		user.setOrgCode("DEFAULT_ORG_CODE");
-		return user;		
-	}
-	
-	@Post
-	@Path("/login2")
-	public AuthUser login2(@JdbcConn(false) Connection con,@DefaultValue("org.jfw.apt.demo.web.service.LoginService.EMPTY") String ln,@Nullable String pw){
-		LoginUser user = new LoginUser();
-		user.setId("1234567687");
-		user.setName("DEFAULT");
-		user.setOrgCode("DEFAULT_ORG_CODE");
-		return user;		
-	}
-	@Get
-	@Path("/loginUser")
-	public AuthUser loginUser( @org.jfw.apt.web.annotation.LoginUser(false) AuthUser user){
 		return user;
 	}
-	
+
+	@Post
+	@Path("/login2")
+	public AuthUser login2(@JdbcConn(false) Connection con,
+			@DefaultValue("org.jfw.apt.demo.web.service.LoginService.EMPTY") String ln, @Nullable String pw)
+			throws JfwInvalidParamException {
+		LoginUser user = new LoginUser();
+		user.setId("1234567687");
+		user.setName("DEFAULT");
+		user.setOrgCode("DEFAULT_ORG_CODE");
+		return user;
+	}
+
+	@Get
+	@Path("/loginUser")
+	public AuthUser loginUser(@org.jfw.apt.web.annotation.LoginUser(false) AuthUser user)
+			throws JfwInvalidParamException {
+		return user;
+	}
+
 	@Path("/login/{id}")
-	public void login4(@PathVar String id){}
-	
-	
-	
+	public void login4(@PathVar String id) {
+	}
+
 	@Path("/login/pq/{id}/{name}")
-	public String ddd(@PVar String id, @PVar String name){
+	public String ddd(@PVar String id, @PVar String name) throws JfwInvalidParamException {
 		return null;
 	}
+
 	@Post
 	@Path("/dfss")
-	public void ds(EUser user,TestPojo pojo){
-		
+	public void ds(EUser user, TestPojo pojo) throws JfwInvalidParamException {
+
 	}
-	
-	
+
 }

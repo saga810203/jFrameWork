@@ -18,12 +18,6 @@ public class BaseServlet extends HttpServlet{
 
 	private static boolean startSuccess = true;
 	private static String failReason = null;
-	
-	
-	
-	
-	
-	
 	protected int prefixLen = 0;
 	protected int viewType = 0;
 	

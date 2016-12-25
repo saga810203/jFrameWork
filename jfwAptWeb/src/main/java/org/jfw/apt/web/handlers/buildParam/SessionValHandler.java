@@ -33,7 +33,7 @@ public final class SessionValHandler implements BuildParameter {
 
 			cw.bL("if(null==").w(ln).el("){");
 			if (dv == null) {
-				cw.l("throw new JfwInvalidParamException(\"" + aptWebHandler.getMethodUrl() + " session domain\",\""
+				cw.l("throw new org.jfw.util.exception.JfwInvalidParamException(\"" + aptWebHandler.getMethodUrl() + " session domain\",\""
 						+ val + "\");");
 			} else {
 				cw.bL(mpe.getName()).w("=").w(dv).el(";");
@@ -48,7 +48,7 @@ public final class SessionValHandler implements BuildParameter {
 			if (dv == null) {
 				if (!mpe.isNullable()) {
 					cw.bL("if(null==").w(mpe.getName()).el("){");
-					cw.l("throw new JfwInvalidParamException(\"" + aptWebHandler.getMethodUrl() + " session domain\",\""
+					cw.l("throw new org.jfw.util.exception.JfwInvalidParamException(\"" + aptWebHandler.getMethodUrl() + " session domain\",\""
 							+ val + "\");");
 					cw.l("}");
 				} // cw.l("throw new IllegalArgumentException(\"not found
