@@ -116,6 +116,24 @@ public final class StringUtil {
 		return new String(cs);
 	}
 
+	public static String bytesToStringDesc(byte[] bytes) {
+		if (null == bytes)
+			return "null";
+		StringBuilder sb = new StringBuilder();
+		sb.append("[");
+		char[] cs = new char[3];
+		cs[2] = ',';
+		for (int i = 0; i < bytes.length; ++i) {
+			byte b = bytes[i];
+			cs[1] = digits[b & 0xf];
+			cs[0] = digits[(b & 0xf0) >> 4];
+			sb.append(cs);
+
+		}
+		sb.append("]");
+		return sb.toString();
+	}
+
 	final static char[] digits = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F' };
 
 	public static void main(String[] args) {
