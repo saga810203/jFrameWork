@@ -77,7 +77,7 @@ public final class JfwAppContext {
 	synchronized private static void createDefaultScheduledExecutorService() {
 		if (null != scheduledExecutorService)
 			return;
-		scheduledExecutorService = Executors.newScheduledThreadPool(0);
+		scheduledExecutorService = Executors.newScheduledThreadPool(1);
 	}
 
 	public static BeanFactory getBeanFactory() {

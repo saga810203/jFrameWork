@@ -143,7 +143,7 @@ public final class AuthUtil {
 		return serialAuth(grant(deSerialAuth(authStr),auth));
 	}
 	public static String revoke(String authStr,int auth){
-		return serialAuth(revoke(deSerialAuth(authStr),auth));		
+		return serialAuth(reBuild(revoke(deSerialAuth(authStr),auth)));		
 	}
 	
 	public static void main(String main[]) {

@@ -119,9 +119,8 @@ public class JdkCompiler implements Compiler {
 		if (loader instanceof URLClassLoader
 				&& (!loader.getClass().getName().equals("sun.misc.Launcher$AppClassLoader"))) {
 			try {
-				URLClassLoader urlClassLoader = (URLClassLoader) loader;
 				List<File> files = new ArrayList<File>();
-				for (URL url : urlClassLoader.getURLs()) {
+				for (URL url : ((URLClassLoader) loader).getURLs()) {
 					files.add(new File(url.getFile()));
 				}
 				manager.setLocation(StandardLocation.CLASS_PATH, files);
