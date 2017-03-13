@@ -6,9 +6,11 @@ import org.jfw.apt.exception.AptException;
 import org.jfw.apt.model.MethodParamEntry;
 import org.jfw.apt.out.ClassWriter;
 import org.jfw.apt.web.RequestHandler;
+import org.jfw.apt.web.handlers.buildParam.ArrayJsonHandler;
 import org.jfw.apt.web.handlers.buildParam.BuildParameter;
 import org.jfw.apt.web.handlers.buildParam.CookieHandler;
 import org.jfw.apt.web.handlers.buildParam.DefineHandler;
+import org.jfw.apt.web.handlers.buildParam.JsonHandler;
 import org.jfw.apt.web.handlers.buildParam.NopHandler;
 import org.jfw.apt.web.handlers.buildParam.PVarHandler;
 import org.jfw.apt.web.handlers.buildParam.ParameterMapHandler;
@@ -23,7 +25,7 @@ public class BuildParamHandler extends RequestHandler {
 
 	private static final BuildParameter[] hanlders = new BuildParameter[] { DefineHandler.INS, NopHandler.INS,
 			ParameterMapHandler.INS, PathVarHandler.INS,PVarHandler.INS ,RequestBodyHandler.INS,RequestHeaderHandler.INS,
-			RequestParamHandler.INS,SessionValHandler.INS,UploadHandler.INS,CookieHandler.INS};
+			RequestParamHandler.INS,SessionValHandler.INS,UploadHandler.INS,CookieHandler.INS,JsonHandler.INS,ArrayJsonHandler.INS};
 
 	@Override
 	public void init() {
