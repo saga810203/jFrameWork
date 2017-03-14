@@ -212,7 +212,7 @@ public abstract class BasePageQueryHandler extends BaseQueryHandler {
 			}
 			doAfterWhereForFirstPage();
 			if (this.orderBy != null) {
-				cw.bL("sql = sql + ").w("\"").ws(this.orderBy).el("\";");
+				cw.bL("sql = sql + ").w("\" ").ws(this.orderBy).el("\";");
 				;
 			}
 		}

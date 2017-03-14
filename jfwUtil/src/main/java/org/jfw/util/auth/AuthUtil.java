@@ -27,7 +27,45 @@ public final class AuthUtil {
 		int ind = auth % 32;
 		return 0 != (auths[bIndex] & AUTH_BIT[ind]);
 	}
-
+	public static int[] compress(int[] auths){
+		if(auths==null || auths.length ==0  ) return new int[]{0};		
+		 Arrays.sort(auths);
+		int max = auths[auths.length-1];
+		int bIndex = max>>5;
+		int[] ret = new int[bIndex+1];
+		Arrays.fill(ret,0);
+		for(int auth:auths){
+			int ind = auth % 32;
+			ret[bIndex] = ret[bIndex] | AUTH_BIT[ind];
+		}
+		return ret;
+	}
+	
+	public static int[] unCompress(int[] auths){
+		if(auths==null || auths.length ==0  ) return new int[]{0};		
+		int[] ret = new int[16];
+		int ina = 0;
+		int max = auths.length*32;
+		for(int i = 1 ; i <= max;){
+			int bIndex = i >> 5;
+			int ind = i % 32;
+			if( 0 != (auths[bIndex] & AUTH_BIT[ind])){
+				if(ina>= ret.length){
+					int[] nret = new int[ret.length*2];
+					System.arraycopy(ret,0,nret, 0,ret.length);
+					ret = nret;
+				}
+				ret[ina]= i;
+				++ina;
+			}
+		}
+		if(ret.length> ina) {
+			int[] nret = new int[ina];
+			System.arraycopy(ret,0,nret, 0,ina);
+			return nret;
+		}
+		return ret;
+	}
 	public static int[] grant(int[] auths, int auth) {
 		if (auth < 1)
 			return auths;
