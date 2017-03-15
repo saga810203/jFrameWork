@@ -59,7 +59,7 @@ public final class RequestParamHandler implements BuildParameter {
 		private void initTargetType(MethodParamEntry mpe) throws AptException {
 			this.mpe = mpe;
 			TypeName tn = annotation.getRealClass();
-			if (TypeName.OBJECT.equals(tn))
+			if (null == tn || TypeName.OBJECT.equals(tn))
 				tn = TypeName.get(this.mpe.getRef().asType());
 
 			if (!tn.getClass().equals(ClassName.class)) {
