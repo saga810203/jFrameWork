@@ -71,7 +71,7 @@ public abstract class WebUtil {
     			begin=i+1;
     		}
     	}
-    	if(clen - begin == 1){
+    	if(clen == begin){
     		list.add(ConstData.EMPTY_STRING);
     	}else{
     		list.add(new String(cs,begin,clen - begin));
